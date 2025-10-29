@@ -1,0 +1,42 @@
+.simpleHomePage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: #001E42;
+  text-align: center;
+}
+
+.simpleContent {
+  max-width: 600px;
+  padding: 40px;
+}
+
+.simpleContent h1 {
+  font-size: 48px;
+  margin-bottom: 24px;
+}
+
+.simpleContent p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.simpleButton {
+  background-color: #FE991F;
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.simpleButton:hover {
+  background-color: #e0891a;
+}
