@@ -5,6 +5,7 @@
 }
 
 .distance-filter-bar {
+  background-color: transparent !important;
   width: 100%;
   margin: 0;
 }
