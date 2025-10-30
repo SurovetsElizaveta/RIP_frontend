@@ -1,6 +1,7 @@
 import { useState, type FC, type FormEvent } from "react";
 import './FilterBar.css'
 import { useNavigate } from "react-router-dom";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 export const FilterBar = () => {
   const navigate = useNavigate();
@@ -32,36 +33,54 @@ export const FilterBar = () => {
     setter(value);
   };
 
-  return (
-    <form className="distance-filter-bar" onSubmit={handleSubmit}>
-      <h4>Расстояние от</h4>
-      <input 
-        className="distance-filter-input" 
-        type="number" 
-        name="min_distance" 
-        value={minDistance}
-        onChange={handleInputChange(setMinDistance)}
-        min="0"
-      />
-      <h4>до</h4>
-      <input 
-        className="distance-filter-input" 
-        type="number" 
-        name="max_distance" 
-        value={maxDistance}
-        onChange={handleInputChange(setMaxDistance)}
-        min="0"
-      />
-      <button className="distance-filter-btn" type="submit">
-        Применить
-      </button>
-      <button 
-        type="button" 
-        className="distance-filter-btn" 
-        onClick={handleReset}
-      >
-        Сбросить
-      </button>
-    </form>
-  );
+ return (
+  <Form onSubmit={handleSubmit} className="distance-filter-bar">
+    <Row className="align-items-center g-2">
+      <Col xs="auto">
+        <Form.Label className="mb-0">Расстояние от</Form.Label>
+      </Col>
+      <Col xs="auto">
+        <Form.Control
+          className="distance-filter-input"
+          type="number"
+          name="min_distance"
+          value={minDistance}
+          onChange={handleInputChange(setMinDistance)}
+          min="0"
+        />
+      </Col>
+      <Col xs="auto">
+        <Form.Label className="mb-0">до</Form.Label>
+      </Col>
+      <Col xs="auto">
+        <Form.Control
+          className="distance-filter-input"
+          type="number"
+          name="max_distance"
+          value={maxDistance}
+          onChange={handleInputChange(setMaxDistance)}
+          min="0"
+        />
+      </Col>
+      <Col xs="auto">
+        <Button 
+          type="submit" 
+          className="distance-filter-btn"
+        >
+          Применить
+        </Button>
+      </Col>
+      <Col xs="auto">
+        <Button 
+          type="button" 
+          className="distance-filter-btn"
+          onClick={handleReset}
+          variant="outline-secondary"
+        >
+          Сбросить
+        </Button>
+      </Col>
+    </Row>
+  </Form>
+);
 };

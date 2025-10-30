@@ -6,19 +6,21 @@ const API_BASE = '/api';
 export const ROUTES_MOCK: Route[] = [
   {
     RouteID: 1,
-    Title: "Маршрут Владивосток - Находка",
-    Distance: 150,
-    Description: "Морской маршрут между портами Владивосток и Находка",
+    Title: "Владивосток - Сямынь",
+    Distance: 2574,
+    Description: "Сервис FESCO China Direct Line (FCDL) осуществляет перевозки целого спектра товаров",
     Status: "действует",
-    Delay: 2
+    Delay: 56,
+    ImageURL: "/images/default_route.svg"
   },
   {
     RouteID: 2,
-    Title: "Маршрут Находка - Восточный",
-    Distance: 80,
-    Description: "Короткий маршрут между портами Находка и Восточный",
+    Title: "Санкт-Петербург - Шанхай",
+    Distance: 21792,
+    Description: "Суда FESCO Baltorient Line (FBOL) везут товары по маршруту Санкт-Петербург — Нава-Шева* — Циндао",
     Status: "действует",
-    Delay: 1
+    Delay: 72,
+    ImageURL: "/images/default_route.svg"
   }
 ];
 

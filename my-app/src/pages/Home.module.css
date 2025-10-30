@@ -1,16 +1,21 @@
 .simpleHomePage {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: white;
   color: #001E42;
-  text-align: center;
+  padding-top: 60px; /* Для header'а */
+  display: flex;
+  align-items: center;
+}
+
+.centeredRow {
+  width: 100%;
 }
 
 .simpleContent {
   max-width: 600px;
   padding: 40px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .simpleContent h1 {
@@ -26,17 +31,16 @@
 }
 
 .simpleButton {
-  background-color: #FE991F;
-  color: white;
-  border: none;
-  padding: 16px 40px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  background-color: #FE991F !important;
+  color: white !important;
+  border: none !important;
+  padding: 16px 40px !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  transition: background-color 0.3s ease !important;
 }
 
 .simpleButton:hover {
-  background-color: #e0891a;
+  background-color: #e0891a !important;
 }

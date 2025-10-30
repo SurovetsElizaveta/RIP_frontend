@@ -1,6 +1,7 @@
+import { Badge, Button } from 'react-bootstrap';
 import { getDraftInfo } from "../api/api";
 import { useEffect, useState, type FC } from "react";
-import styles from './RequestLink.module.css'
+import styles from './RequestLink.module.css';
 
 export const RequestLink: FC = () => {
   const [draftCount, setDraftCount] = useState(0);
@@ -13,12 +14,23 @@ export const RequestLink: FC = () => {
     fetchDraftInfo();
   }, []);
 
+  const hasItems = draftCount > 0;
+
   return (
-    <div className={styles.requestLinkEmpty}>
-        <img src="http://127.0.0.1:9000/test/sea_request_null.svg" alt="request"/>
-        <div className={styles.requestCounterEmpty}>
-          <h4>{draftCount}</h4>
-        </div>
-    </div>
+    <Button 
+      className={`${styles['requestLink']} ${hasItems ? styles['requestLinkFilled'] : styles['requestLinkEmpty']}`}
+    >
+      <img 
+        src="http://127.0.0.1:9000/test/sea_request_null.svg" 
+        alt="request"
+        className={styles['requestIcon']}
+      />
+      <Badge 
+        bg="#FFFFFF"
+        className={styles['requestCounter']}
+      >
+        {draftCount}
+      </Badge>
+    </Button>
   );
 };

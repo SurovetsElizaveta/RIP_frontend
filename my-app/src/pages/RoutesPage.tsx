@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import type { Route } from '../types/types';
 import { RouteCard } from '../components/RouteCard';
 import { RequestLink } from '../components/RequestLink';
 import { getRoutes } from '../api/api';
-import './Routes.css';
 import { useSearchParams } from 'react-router-dom';
+import styles from './Routes.module.css'; // Если будете использовать CSS Modules
 
 export const RoutesPage = () => {
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -60,50 +61,76 @@ export const RoutesPage = () => {
   };
 
   return (
-    <div>
+    <Container fluid className="p-0">
       <RequestLink />
-      <div className="main-space">
-        <div className="filter-and-request">
-          <form className="distance-filter-bar" onSubmit={handleSubmit}>
-            <h4>Расстояние от</h4>
-            <input 
-              className="distance-filter-input" 
-              type="number" 
-              name="min_distance" 
-              value={minDistance}
-              onChange={handleInputChange(setMinDistance)}
-              min="0"
-            />
-            <h4>до</h4>
-            <input 
-              className="distance-filter-input" 
-              type="number" 
-              name="max_distance" 
-              value={maxDistance}
-              onChange={handleInputChange(setMaxDistance)}
-              min="0"
-            />
-            <button className="distance-filter-btn" type="submit">
-              Применить
-            </button>
-            <button 
-              type="button" 
-              className="distance-filter-btn" 
-              onClick={handleReset}
-            >
-              Сбросить
-            </button>
-          </form>
-        </div>
-        <div className="cards">
+      <Container className={styles['main-space']}>
+        <Row className="justify-content-center mb-4">
+          <Col xs={12} lg={10}>
+            <Card className="shadow-sm">
+              <Card.Body>
+                <Form onSubmit={handleSubmit} className={styles['distance-filter-bar']}>
+                  <Row className="align-items-center justify-content-center g-3">
+                    <Col xs="auto">
+                      <Form.Label className="mb-0 fw-semibold">Расстояние от</Form.Label>
+                    </Col>
+                    <Col xs="auto">
+                      <Form.Control
+                        className={styles['distance-filter-input']}
+                        type="number"
+                        name="min_distance"
+                        value={minDistance}
+                        onChange={handleInputChange(setMinDistance)}
+                        min="0"
+                        placeholder="0"
+                      />
+                    </Col>
+                    <Col xs="auto">
+                      <Form.Label className="mb-0 fw-semibold">до</Form.Label>
+                    </Col>
+                    <Col xs="auto">
+                      <Form.Control
+                        className={styles['distance-filter-input']}
+                        type="number"
+                        name="max_distance"
+                        value={maxDistance}
+                        onChange={handleInputChange(setMaxDistance)}
+                        min="0"
+                        placeholder="100"
+                      />
+                    </Col>
+                    <Col xs="auto">
+                      <Button 
+                        type="submit" 
+                        className={styles['distance-filter-btn']}
+                        variant="primary"
+                      >
+                        Применить
+                      </Button>
+                    </Col>
+                    <Col xs="auto">
+                      <Button 
+                        type="button" 
+                        className={styles['distance-filter-btn']}
+                        onClick={handleReset}
+                        variant="outline-secondary"
+                      >
+                        Сбросить
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className={styles['cards']}>
           {routes.map(route => (
-            <RouteCard 
-              key={route.RouteID} 
-              route={route} 
-            />
+            <Col key={route.RouteID} xs={12} sm={6} lg={4} xl={3} className="mb-4">
+              <RouteCard route={route} />
+            </Col>
           ))}
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Container>
+    </Container>
   );
 };

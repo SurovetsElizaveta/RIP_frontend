@@ -1,74 +1,47 @@
 .requestLink {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    width: 60px;
-    height: 60px;
-    background-color: #09388A;
-    position: absolute;
-    top: 70px;
-    right: 4px;
-    z-index: 10; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  z-index: 10;
+  border: none;
+  padding: 0 !important;
+  border-radius: 0px !important;
 }
 
-.requestCounter {
-    background-color: #09388A;
-    border-radius: 20px;
-    border: 1px solid #FFFFFF;
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    top: 4px;
-    right: 2px;
-    z-index: 11; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.requestCounter h4 {
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: Bold;
+.requestLinkFilled {
+  background-color: #09388A !important;
 }
 
 .requestLinkEmpty {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    width: 60px;
-    height: 60px;
-    background-color: #FFFFFF;
-    border: 1px solid #09388A;
-    position: absolute;
-    top: 70px; 
-    right: 4px; 
-    z-index: 10; 
+  background-color: #FFFFFF !important;
+  border: 1px solid #09388A !important;
 }
 
-.requestCounterEmpty {
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    border: 1px solid #09388A;
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    top: 4px; 
-    right: 2px; 
-    z-index: 10; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.requestIcon {
+  width: 40px;
+  height: 40px;
 }
 
-.requestCounterEmpty h4 {
-    color: #09388A;
-    font-size: 14px;
-    font-weight: Bold;
-    margin: 0;
-    padding: 0;
+.requestCounter {
+  background-color: #FFFFFF !important;
+  position: absolute !important;
+  top: 4px !important;
+  right: 2px !important;
+  border-radius: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid #09388A !important;
+  color: #09388A !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  min-width: auto !important;
 }

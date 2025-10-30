@@ -1,3 +1,4 @@
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Route } from '../types/types';
@@ -23,21 +24,29 @@ export const RouteDetailsPage = () => {
   }
 
   return (
-    <div className={styles.mainSpace}>
-      <div className={styles.card}>
-        <div className={styles.cardInfo}>
-          <h1>{route.Title}</h1>
-          <h2>О перевозке</h2>
-          <h3>{route.Description}</h3>
-          <h2>Расстояние</h2>
-          <h3>{route.Distance} km</h3>
-        </div>
-        <img 
-          className={styles.cardImg} 
-          src={route.ImageURL} 
-          alt={`route${route.RouteID}`}
-        />
-      </div>
-    </div>
+    <Container className={styles['mainSpace']}>
+      <Card className={styles['card']}>
+        <Row className="g-0 h-100">
+          <Col md={7}>
+            <Card.Body className={styles['cardInfo']}>
+              <Card.Title as="h1" className="mb-4">{route.Title}</Card.Title>
+              
+              <Card.Subtitle as="h2" className="mb-2">О перевозке</Card.Subtitle>
+              <Card.Text as="p" className="mb-4">{route.Description}</Card.Text>
+              
+              <Card.Subtitle as="h2" className="mb-2">Расстояние</Card.Subtitle>
+              <Card.Text as="p" className="mb-0">{route.Distance} km</Card.Text>
+            </Card.Body>
+          </Col>
+          <Col md={5}>
+            <Card.Img 
+              className={styles['cardImg']}
+              src={route.ImageURL} 
+              alt={`route${route.RouteID}`}
+            />
+          </Col>
+        </Row>
+      </Card>
+    </Container>
   );
 };

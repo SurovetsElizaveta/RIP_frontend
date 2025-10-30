@@ -1,0 +1,43 @@
+.main-space {
+  margin: 0px 180px;
+  position: relative;
+  padding-top: 80px;
+}
+
+.distance-filter-bar {
+  width: 100%;
+  margin: 0;
+}
+
+.distance-filter-input {
+  width: 100px !important;
+  height: 40px;
+  border: 1px solid #ddd !important;
+  padding-left: 10px;
+}
+
+.distance-filter-input:focus {
+  border-color: #FE991F !important;
+  box-shadow: 0 0 0 0.2rem rgba(254, 153, 31, 0.25) !important;
+}
+
+.distance-filter-btn {
+  padding: 10px 24px !important;
+  background-color: #FE991F !important;
+  border: 1px solid transparent !important;
+  font-size: 14px;
+  font-weight: 450;
+  color: #FFFFFF !important;
+  white-space: nowrap;
+}
+
+.distance-filter-btn:hover {
+  background-color: transparent !important;
+  border: 1px solid #FE991F !important;
+  color: #FE991F !important;
+}
+
+.cards {
+  gap: 20px;
+  justify-content: flex-start;
+}

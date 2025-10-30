@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import './RouteCard.css';
+import styles from './RouteCard.module.css'; // Измените импорт
 import type { Route } from '../types/types';
 import { ROUTES } from '../routes';
+import { Button, Card } from 'react-bootstrap';
 
 interface RouteCardProps {
   route: Route;
@@ -21,28 +22,40 @@ export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
   };
 
   return (
-    <div className="route-card-flex" onClick={handleCardClick}>
-      <div className="card-info-flex">
-        <div className="card-info-text">
-          <h4>{route.Title}</h4>
-          <h5>{route.Distance} km</h5>
+    <Card 
+      className={styles['route-card-flex']} // Используйте квадратные скобки
+      onClick={handleCardClick}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className={`${styles['card-content-wrapper']} d-flex`}>
+        <Card.Body className={`${styles['card-info-flex']} p-3 flex-grow-1`}>
+          <div className={styles['card-info-text']}>
+            <Card.Title as="h4" className={`${styles['custom-card-title']} mb-2`}>
+              {route.Title}
+            </Card.Title>
+            <Card.Text as="h5" className={`${styles['custom-card-distance']} text-muted`}>
+              {route.Distance} km
+            </Card.Text>
+          </div>
+          <Button 
+            variant="primary"
+            className={`${styles['add-to-draft-btn']} w-100`}
+            onClick={handleAddToDraft}
+          >
+            Добавить в заявку
+          </Button>
+        </Card.Body>
+        <div className={styles['card-image-container']}>
+          <Card.Img 
+            className={`${styles['card-img-flex']} h-100`}
+            src={route.ImageURL}
+            alt={`route${route.RouteID}`}
+            onError={(e) => {
+              e.currentTarget.src = '/images/default_route.svg';
+            }}
+          />
         </div>
-        <button 
-          type="button" 
-          className="add-to-draft-btn"
-          onClick={handleAddToDraft}
-        >
-          Добавить в заявку
-        </button>
       </div>
-      <img 
-        className="card-img-flex" 
-        src={route.ImageURL} 
-        alt={`route${route.RouteID}`} 
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/images/default_route.svg';
-        }}
-      />
-    </div>
+    </Card>
   );
 };
