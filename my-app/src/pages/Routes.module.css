@@ -1,7 +1,16 @@
 .main-space {
-  margin: 0px 180px;
+  margin: 0px 180px 0px 180px;
   position: relative;
   padding-top: 80px;
+  padding-left: 70px !important;
+}
+
+.custom-col {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  display: flex;
+  justify-content: center;
 }
 
 .distance-filter-bar {
@@ -19,7 +28,7 @@
 
 .distance-filter-input:focus {
   border-color: #FE991F !important;
-  box-shadow: 0 0 0 0.2rem rgba(254, 153, 31, 0.25) !important;
+  box-shadow: none !important;
 }
 
 .distance-filter-btn {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import type { Route } from '../types/types';
 import { RouteCard } from '../components/RouteCard';
 import { RequestLink } from '../components/RequestLink';
@@ -31,10 +31,14 @@ export const RoutesPage = () => {
     <Container fluid className="p-0">
       <RequestLink />
       <Container className={`${styles['main-space']} pt-5`}>
-        <FilterBar />
-        <Row className={styles['cards']}>
+        <Row className="justify-content-center mb-4">
+          <Col xs={12} className="d-flex justify-content-center">
+            <FilterBar />
+          </Col>
+        </Row>
+        <Row className="g-3">
           {routes.map(route => (
-            <Col key={route.RouteID} xs={12} sm={6} lg={4} xl={3} className="mb-4">
+            <Col key={route.RouteID} xs={12} sm={6} md={6} lg={4} xl={3} className={styles['custom-col']}>
               <RouteCard route={route} />
             </Col>
           ))}
