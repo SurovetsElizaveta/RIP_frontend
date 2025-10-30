@@ -7,6 +7,7 @@ import { FilterBar } from '../components/FilterBar';
 import { getRoutes } from '../api/api';
 import { useSearchParams } from 'react-router-dom';
 import styles from './Routes.module.css';
+import { BreadCrumbs } from '../components/BreadCrumbs';
 
 export const RoutesPage = () => {
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -27,6 +28,10 @@ export const RoutesPage = () => {
     fetchRoutes();
   }, [searchParams]);
 
+  const breadcrumbs = [
+    { label: 'Маршруты', path: '/routes' }
+  ];
+
   return (
     <Container fluid className="p-0">
       <RequestLink />
@@ -36,6 +41,7 @@ export const RoutesPage = () => {
             <FilterBar />
           </Col>
         </Row>
+        <BreadCrumbs crumbs={breadcrumbs} />
         <Row className="g-3">
           {routes.map(route => (
             <Col key={route.RouteID} xs={12} sm={6} md={6} lg={4} xl={3} className={styles['custom-col']}>

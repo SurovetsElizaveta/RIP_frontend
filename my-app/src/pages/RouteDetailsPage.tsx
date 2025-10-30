@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import type { Route } from '../types/types';
 import { getRouteById } from '../api/api';
 import styles from './RouteDetails.module.css';
+import { BreadCrumbs } from '../components/BreadCrumbs';
 
 export const RouteDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,8 +24,14 @@ export const RouteDetailsPage = () => {
     return <div>Загрузка...</div>;
   }
 
+  const breadcrumbs = [
+    { label: 'Маршруты', path: '/routes' },
+    { label: route ? route.Title : 'Загрузка...' }
+  ];
+
   return (
     <Container className={styles['mainSpace']}>
+      <BreadCrumbs crumbs={breadcrumbs} />
       <Card className={styles['card']}>
         <Row className="g-0 h-100">
           <Col md={7}>

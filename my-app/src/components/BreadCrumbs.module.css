@@ -1,0 +1,38 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 20px 40px 20px 32px;
+  font-size: 14px;
+}
+
+.breadcrumbs li {
+  margin: 0 8px;
+}
+
+.breadcrumbs li:first-child {
+  margin-left: 0;
+}
+
+.breadcrumbs li:last-child {
+  margin-right: 0;
+}
+
+.breadcrumbs a {
+  color: #09388A;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  color: #FE991F;
+  text-decoration: underline;
+}
+
+.breadcrumbs .slash {
+  color: #6c757d;
+}
+
+.breadcrumbs li:last-child {
+  color: #001E42;
+}
