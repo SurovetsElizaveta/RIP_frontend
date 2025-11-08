@@ -1,14 +1,25 @@
 .custom-header {
   height: 60px;
-  background-color: #09388A !important;
+  background-color: #09388A;
   margin: 0;
-  border: none;
   padding: 0;
 }
 
+.header-container {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  width: 100%;
+}
+
 .custom-navbar-brand {
-  padding: 0 !important;
-  cursor: pointer;
+  padding: 0;
   margin: 0;
   display: flex;
   align-items: center;
@@ -17,9 +28,23 @@
 .header-logo {
   width: 60px;
   height: 60px;
+  cursor: pointer;
   margin-left: 10px;
 }
 
-.navbar-brand {
-  margin-right: 0 !important;
+.routes-nav {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  color: #FFFFFF !important;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import type { Route } from '../types/types';
 import { RouteCard } from '../components/RouteCard';
@@ -9,22 +9,22 @@ import { useSearchParams } from 'react-router-dom';
 import styles from './Routes.module.css';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 
-export const RoutesPage = () => {
+export const RoutesPage: FC = () => {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [searchParams] = useSearchParams();
-  
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      const min = searchParams.get('min_distance');
-      const max = searchParams.get('max_distance');
-      
-      const minNum = min ? parseInt(min, 10) : undefined;
-      const maxNum = max ? parseInt(max, 10) : undefined;
-      
-      const routesData = await getRoutes(minNum, maxNum);
-      setRoutes(routesData);
-    };
+
+  const fetchRoutes = async () => {
+    const min = searchParams.get('min_distance');
+    const max = searchParams.get('max_distance');
     
+    const minNum = min ? parseInt(min, 10) : undefined;
+    const maxNum = max ? parseInt(max, 10) : undefined;
+    
+    const routesData = await getRoutes(minNum, maxNum);
+    setRoutes(routesData);
+  };
+
+  useEffect(() => {
     fetchRoutes();
   }, [searchParams]);
 

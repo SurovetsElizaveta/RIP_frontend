@@ -23,7 +23,7 @@ export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
 
   return (
     <Card 
-      className={styles['route-card-flex']} // Используйте квадратные скобки
+      className={styles['route-card-flex']} 
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
