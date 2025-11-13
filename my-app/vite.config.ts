@@ -1,10 +1,42 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+import mkcert from 'vite-plugin-mkcert'
+import fs from 'fs';
+import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    mkcert(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
+      manifest:{
+        "name": "Routes",
+        "short_name": "Routes",
+        "start_url": "/RIP_frontend/",
+        "display": "standalone",
+        "background_color": "#09388A",
+        "theme_color": "#F3F3F3",
+        "orientation": "portrait-primary",
+        "icons": [
+          {
+            "src": "/images/main_ship.svg",
+            "type": "image/svg", "sizes": "192x192"
+          }
+        ]
+      }
+    })
+  ],
   base: "/RIP_frontend/",
   server: {
+    https:{
+      key: fs.readFileSync(path.resolve(__dirname, 'cert.key')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
+    },
     proxy: {
       "/api": {
         target: "http://host.docker.internal:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
