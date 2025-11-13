@@ -1,0 +1,15 @@
+{
+  "name": "Routes",
+  "short_name": "Routes",
+  "start_url": "/RIP_frontend/",
+  "display": "standalone",
+  "background_color": "#09388A",
+  "theme_color": "#F3F3F3",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/main_ship.svg",
+      "type": "image/svg", "sizes": "192x192"
+    }
+  ]
+}
