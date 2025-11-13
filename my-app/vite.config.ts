@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     mkcert(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       devOptions: {
         enabled: true,
       },
