@@ -1,25 +1,47 @@
-import { useState, type FC, type FormEvent } from "react";
+import { useState, type FC, type FormEvent, useEffect } from "react";
 import styles from './FilterBar.module.css';
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setDistanceFilterAction, clearFiltersAction, useFilters } from "../slices/filterSlice";
 
 export const FilterBar: FC = () => {
   const navigate = useNavigate();
-  const [minDistance, setMinDistance] = useState<string>('');
-  const [maxDistance, setMaxDistance] = useState<string>('');
+  const dispatch = useDispatch();
+  const filters = useFilters();
+  
+  const [minDistance, setMinDistance] = useState<string>(
+    filters.minDistance ? filters.minDistance.toString() : ''
+  );
+  const [maxDistance, setMaxDistance] = useState<string>(
+    filters.maxDistance ? filters.maxDistance.toString() : ''
+  );
+
+  useEffect(() => {
+    setMinDistance(filters.minDistance ? filters.minDistance.toString() : '');
+    setMaxDistance(filters.maxDistance ? filters.maxDistance.toString() : '');
+  }, [filters.minDistance, filters.maxDistance]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    const min = minDistance ? Number(minDistance) : 0;
-    const max = maxDistance ? Number(maxDistance) : 0;
+    const min = minDistance ? Number(minDistance) : null;
+    const max = maxDistance ? Number(maxDistance) : null;
     
-    navigate(`/routes?min_distance=${min}&max_distance=${max}`);
+    dispatch(setDistanceFilterAction({
+      minDistance: min,
+      maxDistance: max
+    }));
+    
+    navigate(`/routes?min_distance=${min || ''}&max_distance=${max || ''}`);
   };
 
   const handleReset = () => {
     setMinDistance('');
     setMaxDistance('');
+    
+    dispatch(clearFiltersAction());
+    
     navigate('/routes');
   };
 
