@@ -12,7 +12,7 @@ export const HomePage = () => {
         playsInline
         className={styles['backgroundVideo']}
       >
-        <source src="/videos/ship_home_video.mp4" type="video/mp4" />
+        <source src='./videos/ship_home_video.mp4' type="video/mp4" />
         Ваш браузер не поддерживает видео.
       </video>
       

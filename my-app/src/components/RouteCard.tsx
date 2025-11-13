@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import styles from './RouteCard.module.css'; // Измените импорт
+import styles from './RouteCard.module.css'; 
 import type { Route } from '../types/types';
 import { ROUTES } from '../routes';
 import { Button, Card } from 'react-bootstrap';
@@ -51,7 +51,7 @@ export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
             src={route.ImageURL}
             alt={`route${route.RouteID}`}
             onError={(e) => {
-              e.currentTarget.src = '/images/default_route.svg';
+              e.currentTarget.src = './images/default_route.svg';
             }}
           />
         </div>

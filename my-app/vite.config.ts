@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  base: "/RIP_frontend/",
   server: {
     proxy: {
       "/api": {
@@ -19,4 +20,7 @@ export default defineConfig({
     strictPort: true,
     port: 3000,
   },
+  build: {
+    assetsDir: 'assets',
+  }
 });
