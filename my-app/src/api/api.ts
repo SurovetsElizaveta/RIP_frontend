@@ -1,8 +1,6 @@
 import type { Route } from '../types/types';
+import { dest_api } from '../../target_config'; 
 
-const API_BASE = '/api';
-
-// Mock данные
 export const ROUTES_MOCK: Route[] = [
   {
     RouteID: 1,
@@ -30,7 +28,7 @@ export const getRoutes = async (minDistance?: number, maxDistance?: number): Pro
     if (minDistance) params.append('min_distance', minDistance.toString());
     if (maxDistance) params.append('max_distance', maxDistance.toString());
     
-    const response = await fetch(`${API_BASE}/routes?${params}`);
+    const response = await fetch(`${dest_api}/routes?${params}`);
     if (!response.ok) throw new Error('Network error');
     
     return await response.json();
@@ -51,7 +49,7 @@ export const getRoutes = async (minDistance?: number, maxDistance?: number): Pro
 
 export const getRouteById = async (id: number): Promise<Route> => {
   try {
-    const response = await fetch(`${API_BASE}/routes/${id}`);
+    const response = await fetch(`${dest_api}/routes/${id}`);
     if (!response.ok) throw new Error('Network error');
     return await response.json();
   } catch (error) {
@@ -64,7 +62,7 @@ export const getRouteById = async (id: number): Promise<Route> => {
 
 export const getDraftInfo = async (): Promise<{draft_id: number | null, count: number}> => {
   try {
-    const response = await fetch(`${API_BASE}/speedrequests/draft`, {
+    const response = await fetch(`${dest_api}/speedrequests/draft`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }

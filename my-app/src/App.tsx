@@ -5,10 +5,23 @@ import { RoutesPage } from './pages/RoutesPage';
 import { RouteDetailsPage } from './pages/RouteDetailsPage';
 import { ROUTES } from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(()=>{
+    invoke('tauri', {cmd:'create'})
+      .then(() =>{console.log("Tauri launched")})
+      .catch(() =>{console.log("Tauri not launched")})
+    return () =>{
+      invoke('tauri', {cmd:'close'})
+        .then(() =>{console.log("Tauri launched")})
+        .catch(() =>{console.log("Tauri not launched")})
+    }
+  }, [])
+
   return (
-    <Router basename="/RIP_frontend">
+    <Router>
       <div className="App">
         <Header />
         <Routes>

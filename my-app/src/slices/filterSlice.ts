@@ -6,20 +6,28 @@ interface FilterState {
   maxDistance: number | null;
 }
 
+const loadFiltersFromStorage = (): FilterState => {
+  try {
+    const saved = localStorage.getItem('routeFilters');
+    return saved ? JSON.parse(saved) : { minDistance: null, maxDistance: null };
+  } catch {
+    return { minDistance: null, maxDistance: null };
+  }
+};
+
 const filterSlice = createSlice({
   name: "filters",
-  initialState: {
-    minDistance: null,
-    maxDistance: null,
-  } as FilterState,
+  initialState: loadFiltersFromStorage(),
   reducers: {
     setDistanceFilter(state, { payload }) {
       state.minDistance = payload.minDistance;
       state.maxDistance = payload.maxDistance;
+      localStorage.setItem('routeFilters', JSON.stringify(state));
     },
     clearFilters(state) {
       state.minDistance = null;
       state.maxDistance = null;
+      localStorage.removeItem('routeFilters');
     }
   }
 });
