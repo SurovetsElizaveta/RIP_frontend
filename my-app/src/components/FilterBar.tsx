@@ -1,12 +1,22 @@
-import { useState, type FC, type FormEvent } from "react";
+import { type FC, type FormEvent } from "react";
 import styles from './FilterBar.module.css';
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { 
+    useMinDistance, 
+    useMaxDistance, 
+    setMinDistanceAction, 
+    setMaxDistanceAction, 
+    resetFiltersAction 
+} from "../slices/filterSlice";
 
 export const FilterBar: FC = () => {
   const navigate = useNavigate();
-  const [minDistance, setMinDistance] = useState<string>('');
-  const [maxDistance, setMaxDistance] = useState<string>('');
+  const dispatch = useDispatch();
+  
+  const minDistance = useMinDistance();
+  const maxDistance = useMaxDistance();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -18,19 +28,14 @@ export const FilterBar: FC = () => {
   };
 
   const handleReset = () => {
-    setMinDistance('');
-    setMaxDistance('');
+    dispatch(resetFiltersAction());
     navigate('/routes');
   };
 
   const handleInputChange = (
-    setter: React.Dispatch<React.SetStateAction<string>>
+    setter: (value: string) => void
   ) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    
-    value = value.replace(/^0+/, '') || '';
-    
-    setter(value);
+    setter(e.target.value);
   };
 
   return (
@@ -45,7 +50,7 @@ export const FilterBar: FC = () => {
             type="number"
             name="min_distance"
             value={minDistance}
-            onChange={handleInputChange(setMinDistance)}
+            onChange={handleInputChange((value) => dispatch(setMinDistanceAction(value)))}
             min="0"
           />
         </Col>
@@ -58,7 +63,7 @@ export const FilterBar: FC = () => {
             type="number"
             name="max_distance"
             value={maxDistance}
-            onChange={handleInputChange(setMaxDistance)}
+            onChange={handleInputChange((value) => dispatch(setMaxDistanceAction(value)))}
             min="0"
           />
         </Col>

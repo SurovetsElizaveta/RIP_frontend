@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://host.docker.internal:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
+        target: "http://localhost:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, "/api"), // можно удалить

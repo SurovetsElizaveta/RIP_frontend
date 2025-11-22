@@ -18,7 +18,7 @@ export const Header: FC = () => {
             className={styles['custom-navbar-brand']}
           >
             <img 
-              src="http://127.0.0.1:9000/test/main_ship.svg" 
+              src="/images/main_ship.svg" 
               alt="Главная страница" 
               className={styles['header-logo']}
             />

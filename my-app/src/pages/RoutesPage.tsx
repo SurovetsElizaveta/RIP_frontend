@@ -8,10 +8,13 @@ import { getRoutes } from '../api/api';
 import { useSearchParams } from 'react-router-dom';
 import styles from './Routes.module.css';
 import { BreadCrumbs } from '../components/BreadCrumbs';
+import { useDispatch } from 'react-redux';
+import { setMinDistanceAction, setMaxDistanceAction } from '../slices/filterSlice';
 
 export const RoutesPage: FC = () => {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
 
   const fetchRoutes = async () => {
     const min = searchParams.get('min_distance');
@@ -19,6 +22,9 @@ export const RoutesPage: FC = () => {
     
     const minNum = min ? parseInt(min, 10) : undefined;
     const maxNum = max ? parseInt(max, 10) : undefined;
+    
+    if (min !== null) dispatch(setMinDistanceAction(min));
+    if (max !== null) dispatch(setMaxDistanceAction(max));
     
     const routesData = await getRoutes(minNum, maxNum);
     setRoutes(routesData);
