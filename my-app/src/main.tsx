@@ -6,6 +6,7 @@ import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import store from "./store";
 import { Provider } from "react-redux";
+import {registerSW} from "virtual:pwa-register";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -14,3 +15,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </Provider>
   </React.StrictMode>,
 )
+
+if ("serviceWorker" in navigator) {
+  registerSW()
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker
+      .register("/serviceWorker.js")
+      .catch(err => console.log("service worker not registered", err))
+  })
+}

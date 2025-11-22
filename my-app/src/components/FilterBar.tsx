@@ -21,8 +21,8 @@ export const FilterBar: FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    const min = minDistance ? Number(minDistance) : 0;
-    const max = maxDistance ? Number(maxDistance) : 0;
+    const min = minDistance ? Number(minDistance) : "";
+    const max = maxDistance ? Number(maxDistance) : "";
     
     navigate(`/routes?min_distance=${min}&max_distance=${max}`);
   };
@@ -35,7 +35,11 @@ export const FilterBar: FC = () => {
   const handleInputChange = (
     setter: (value: string) => void
   ) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
+    let value = e.target.value;
+    if (value !== '' && value !== '0') {
+      value = value.replace(/^0+/, '');
+    }
+    setter(value);
   };
 
   return (

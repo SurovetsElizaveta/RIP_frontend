@@ -7,14 +7,12 @@
 
 .backgroundVideo {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translateX(-50%) translateY(-50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
   z-index: -1;
 }
 
@@ -31,6 +29,9 @@
   position: relative;
   z-index: 1;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .simpleContent {
@@ -38,6 +39,8 @@
   color: white;
   position: relative;
   z-index: 2;
+  padding: 0 20px;
+  max-width: 800px;
 }
 
 .simpleContent h1 {
@@ -45,12 +48,14 @@
   font-weight: bold;
   margin-bottom: 1.5rem;
   color: #FFFFFF;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .simpleContent p {
   font-size: 1.25rem;
   margin-bottom: 2rem;
   line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .simpleButton {
@@ -62,9 +67,130 @@
   font-size: 1.1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .simpleButton:hover {
   background-color: #e0891a;
   transform: translateY(-2px);
+}
+
+@media (max-width: 1200px) {
+  .simpleContent h1 {
+    font-size: 2.5rem;
+  }
+  
+  .simpleContent p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .simpleContent h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .simpleContent p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .simpleButton {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+  
+  .videoBackground {
+    height: 100vh;
+    min-height: 600px;
+  }
+  
+  .simpleHomePage {
+    height: 100vh;
+    min-height: 600px;
+  }
+}
+
+@media (max-width: 545px) {
+  .simpleContent {
+    padding: 0 15px;
+  }
+  
+  .simpleContent h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .simpleContent p {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+  
+  .simpleButton {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+  
+  .videoBackground {
+    height: 100vh;
+    min-height: 500px;
+  }
+  
+  .simpleHomePage {
+    height: 100vh;
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 400px) {
+  .simpleContent {
+    padding: 0 10px;
+  }
+  
+  .simpleContent h1 {
+    font-size: 1.5rem;
+  }
+  
+  .simpleContent p {
+    font-size: 0.85rem;
+  }
+  
+  .simpleButton {
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+  
+  .videoBackground {
+    height: 100vh;
+    min-height: 450px;
+  }
+  
+  .simpleHomePage {
+    height: 100vh;
+    min-height: 450px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .videoBackground {
+    height: 100vh;
+    min-height: 400px;
+  }
+  
+  .simpleHomePage {
+    height: 100vh;
+    min-height: 400px;
+  }
+  
+  .simpleContent h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .simpleContent p {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
 }

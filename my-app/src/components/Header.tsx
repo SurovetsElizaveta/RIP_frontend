@@ -10,7 +10,6 @@ export const Header: FC = () => {
   return (
     <Navbar className={styles['custom-header']} fixed="top">
       <Container fluid className={styles['header-container']}>
-        {/* Логотип и ссылка в одной группе */}
         <div className={styles['header-left']}>
           <Navbar.Brand 
             as={Link} 
@@ -18,13 +17,11 @@ export const Header: FC = () => {
             className={styles['custom-navbar-brand']}
           >
             <img 
-              src="/images/main_ship.svg" 
+              src="./images/main_ship.svg" 
               alt="Главная страница" 
               className={styles['header-logo']}
             />
           </Navbar.Brand>
-          
-          {/* Ссылка "Маршруты" рядом с логотипом */}
           <Nav className={styles['routes-nav']}>
             <Nav.Link 
               as={Link}

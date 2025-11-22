@@ -24,3 +24,41 @@
     object-fit: cover;
     border-radius: 0 !important;
 }
+
+@media (max-width: 1200px) {
+    .mainSpace {
+        padding: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainSpace {
+        padding: 40px 20px;
+    }
+    
+    .cardInfo {
+        padding: 1.5rem !important;
+    }
+    
+    .cardImg {
+        height: 220px;
+    }
+}
+
+@media (max-width: 545px) {
+    .mainSpace {
+        padding: 20px 15px;
+    }
+    
+    .card {
+        min-height: 300px;
+    }
+    
+    .cardInfo {
+        padding: 1rem !important;
+    }
+    
+    .cardImg {
+        height: 180px;
+    }
+}

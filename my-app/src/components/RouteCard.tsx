@@ -37,13 +37,13 @@ export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
               {route.Distance} km
             </Card.Text>
           </div>
-          <Button 
+          {/* <Button 
             variant="primary"
             className={`${styles['add-to-draft-btn']} w-100`}
             onClick={handleAddToDraft}
           >
             Добавить в заявку
-          </Button>
+          </Button> */}
         </Card.Body>
         <div className={styles['card-image-container']}>
           <Card.Img 
@@ -51,7 +51,7 @@ export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
             src={route.ImageURL}
             alt={`route${route.RouteID}`}
             onError={(e) => {
-              e.currentTarget.src = '/images/default_route.svg';
+              e.currentTarget.src = './images/default_route.svg';
             }}
           />
         </div>

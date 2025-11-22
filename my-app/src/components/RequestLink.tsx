@@ -21,7 +21,7 @@ export const RequestLink: FC = () => {
       className={`${styles['requestLink']} ${hasItems ? styles['requestLinkFilled'] : styles['requestLinkEmpty']}`}
     >
       <img 
-        src="/images/sea_request_null.svg" 
+        src="./images/sea_request_null.svg" 
         alt="request"
         className={styles['requestIcon']}
       />
