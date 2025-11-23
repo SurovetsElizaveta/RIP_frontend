@@ -7,6 +7,7 @@ import { ROUTES } from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from 'react';
+import { dest_root } from "../target_config";
 
 function App() {
   useEffect(()=>{
@@ -21,7 +22,7 @@ function App() {
   }, [])
 
   return (
-    <Router>
+    <Router basename={dest_root}>
       <div className="App">
         <Header />
         <Routes>

@@ -2,9 +2,9 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "rip_frontend",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "rip.frontend.application",
   "build": {
-    "frontendDist": "../build",
+    "frontendDist": "../dist",
     "devUrl": "https://172.20.32.1:3000/",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
@@ -22,7 +22,7 @@
     "security": {
       "csp": null
     },
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "bundle": {
     "active": true,
@@ -41,7 +41,8 @@
         "https://localhost:3000",
         "http://10.198.218.65:8080",
         "http://172.20.32.1:8080"
-      ]
+      ],
+      "enabled": true
     }
   }
 }
