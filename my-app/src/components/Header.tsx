@@ -33,6 +33,7 @@ export const Header: FC = () => {
               className={styles['header-logo']}
             />
           </Navbar.Brand>
+          
           <Nav className={styles['routes-nav']}>
             <Nav.Link 
               as={Link}
@@ -51,26 +52,25 @@ export const Header: FC = () => {
           onClick={toggleMobileMenu}
         >
           <div className={styles['nav-mobile-target']}></div>
-          {isMobileMenuOpen && (
-            <div className={styles['nav-mobile-menu']}>
-              <Nav.Link 
-                as={Link}
-                to={ROUTES.HOME}
-                className={styles['nav-link']}
-                onClick={closeMobileMenu}
-              >
-                Главная
-              </Nav.Link>
-              <Nav.Link 
-                as={Link}
-                to={ROUTES.ROUTES}
-                className={styles['nav-link']}
-                onClick={closeMobileMenu}
-              >
-                Маршруты
-              </Nav.Link>
-            </div>
-          )}
+          
+          <div className={styles['nav-mobile-menu']}>
+            <Nav.Link 
+              as={Link}
+              to={ROUTES.HOME}
+              className={styles['nav-link']}
+              onClick={closeMobileMenu}
+            >
+              Главная
+            </Nav.Link>
+            <Nav.Link 
+              as={Link}
+              to={ROUTES.ROUTES}
+              className={styles['nav-link']}
+              onClick={closeMobileMenu}
+            >
+              Маршруты
+            </Nav.Link>
+          </div>
         </div>
       </Container>
     </Navbar>

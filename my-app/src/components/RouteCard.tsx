@@ -2,24 +2,24 @@ import { useNavigate } from 'react-router-dom';
 import styles from './RouteCard.module.css'; // Измените импорт
 import type { Route } from '../types/types';
 import { ROUTES } from '../routes';
-import { Button, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 interface RouteCardProps {
   route: Route;
   onAddToDraft?: (routeId: number) => void;
 }
 
-export const RouteCard = ({ route, onAddToDraft }: RouteCardProps) => {
+export const RouteCard = ({ route }: RouteCardProps) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`${ROUTES.ROUTES}/${route.RouteID}`);
   };
 
-  const handleAddToDraft = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onAddToDraft?.(route.RouteID);
-  };
+  // const handleAddToDraft = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   onAddToDraft?.(route.RouteID);
+  // };
 
   return (
     <Card 
