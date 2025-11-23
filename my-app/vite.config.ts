@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import mkcert from 'vite-plugin-mkcert'
 import fs from 'fs';
 import path from 'path';
+import {api_proxy_addr, img_proxy_addr, dest_root} from "./target_config"
 
 export default defineConfig({
   plugins: [
@@ -31,20 +32,22 @@ export default defineConfig({
       }
     })
   ],
-  base: "/",
+  base: dest_root,
   server: {
     https:{
       key: fs.readFileSync(path.resolve(__dirname, 'cert.key')),
       cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
     },
     proxy: {
-      "/api": {
-        target: "http://localhost:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, "/api"), // можно удалить
-      },
-    },
+         "/api": {
+           target: api_proxy_addr,
+           changeOrigin: true,
+         },
+         "/img-proxy": {
+           target: img_proxy_addr,
+           changeOrigin: true,
+         },
+       },
     watch: {
         usePolling: true,
     }, 

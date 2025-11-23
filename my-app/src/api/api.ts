@@ -1,6 +1,7 @@
 import type { Route } from '../types/types';
+import { dest_api } from "../../target_config";
 
-const API_BASE = '/api';
+const API_BASE = dest_api;
 
 // Mock данные
 export const ROUTES_MOCK: Route[] = [
