@@ -1,27 +1,29 @@
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import type { Route } from '../types/types';
-import { getRouteById } from '../api/api';
 import styles from './RouteDetails.module.css';
 import { BreadCrumbs } from '../components/BreadCrumbs';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store';
+import { fetchRouteById } from '../slices/routesSlice';
 
 export const RouteDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [route, setRoute] = useState<Route | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { current: route, loadingCurrent } = useSelector((state: RootState) => state.routes);
 
   useEffect(() => {
     if (id) {
-      const fetchRoute = async () => {
-        const routeData = await getRouteById(parseInt(id));
-        setRoute(routeData);
-      };
-      fetchRoute();
+      dispatch(fetchRouteById(parseInt(id, 10)));
     }
-  }, [id]);
+  }, [id, dispatch]);
 
-  if (!route) {
-    return <div>Загрузка...</div>;
+  if (loadingCurrent || !route) {
+    return (
+      <div className="d-flex justify-content-center py-5">
+        <Spinner animation="border" />
+      </div>
+    );
   }
 
   const breadcrumbs = [

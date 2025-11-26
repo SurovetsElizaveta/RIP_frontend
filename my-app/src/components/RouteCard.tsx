@@ -1,25 +1,30 @@
 import { useNavigate } from 'react-router-dom';
-import styles from './RouteCard.module.css'; // Измените импорт
+import styles from './RouteCard.module.css';
 import type { Route } from '../types/types';
 import { ROUTES } from '../routes';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store';
+import { addRouteToDraft } from '../slices/speedRequestsSlice';
 
 interface RouteCardProps {
   route: Route;
-  onAddToDraft?: (routeId: number) => void;
 }
 
 export const RouteCard = ({ route }: RouteCardProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
 
   const handleCardClick = () => {
     navigate(`${ROUTES.ROUTES}/${route.RouteID}`);
   };
 
-  // const handleAddToDraft = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   onAddToDraft?.(route.RouteID);
-  // };
+  const handleAddToDraft = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+    await dispatch(addRouteToDraft(route.RouteID));
+  };
 
   return (
     <Card 
@@ -37,13 +42,15 @@ export const RouteCard = ({ route }: RouteCardProps) => {
               {route.Distance} km
             </Card.Text>
           </div>
-          {/* <Button 
-            variant="primary"
-            className={`${styles['add-to-draft-btn']} w-100`}
-            onClick={handleAddToDraft}
-          >
-            Добавить в заявку
-          </Button> */}
+          {isAuthenticated && (
+            <Button 
+              variant="primary"
+              className={`${styles['add-to-draft-btn']} w-100`}
+              onClick={handleAddToDraft}
+            >
+              Добавить в заявку
+            </Button>
+          )}
         </Card.Body>
         <div className={styles['card-image-container']}>
           <Card.Img 

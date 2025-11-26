@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
+import { logoutUserAsync } from "./userSlice";
 
 const filterSlice = createSlice({
     name: "filter",
@@ -18,6 +19,12 @@ const filterSlice = createSlice({
             state.minDistance = '';
             state.maxDistance = '';
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(logoutUserAsync.fulfilled, (state) => {
+            state.minDistance = '';
+            state.maxDistance = '';
+        });
     }
 })
 

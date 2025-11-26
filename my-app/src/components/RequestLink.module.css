@@ -15,6 +15,7 @@
 
 .requestLinkFilled {
   background-color: #09388A !important;
+  border: none !important;
 }
 
 .requestLinkEmpty {
