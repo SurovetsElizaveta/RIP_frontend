@@ -14,6 +14,7 @@ import { BreadCrumbs } from '../components/BreadCrumbs';
 import { ROUTES } from '../routes';
 import { useNavigate } from 'react-router-dom';
 import styles from './DraftPage.module.css';
+import { formatDateForFrontend } from '../api/dateFormatter'
 
 export const DraftPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,6 +28,7 @@ export const DraftPage = () => {
 
   const [departureDate, setDepartureDate] = useState('');
   const [arrivalDates, setArrivalDates] = useState<Record<number, string>>({});
+  const [savingDepartureDate, setSavingDepartureDate] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated || !draftId) {
@@ -38,19 +40,107 @@ export const DraftPage = () => {
 
   useEffect(() => {
     if (current?.speed_request) {
-      setDepartureDate(current.speed_request.departure_date || '');
+      const backendDate = current.speed_request.departure_date;
+      const frontendDate = backendDate ? formatDateForFrontend(backendDate) : '';
+      setDepartureDate(frontendDate);
       
       const dates: Record<number, string> = {};
       if (current.routes && current.route_req) {
         current.routes.forEach((route, index) => {
           if (route.route_id && current.route_req?.[index]) {
-            dates[route.route_id] = current.route_req[index].arrival_date || '';
+            const backendArrivalDate = current.route_req[index].arrival_date;
+            const frontendArrivalDate = backendArrivalDate ? formatDateForFrontend(backendArrivalDate) : '';
+            dates[route.route_id] = frontendArrivalDate;
           }
         });
       }
       setArrivalDates(dates);
     }
   }, [current]);
+
+  const handleSaveDepartureDate = async () => {
+    if (!draftId || !departureDate) return;
+    
+    setSavingDepartureDate(true);
+    try {
+      await dispatch(updateSpeedRequestDepartureDate({ 
+        id: draftId, 
+        departureDate 
+      })).unwrap();
+      
+      await dispatch(fetchSpeedRequestById(draftId));
+    } catch (error) {
+      console.error('Failed to save departure date:', error);
+      alert('Ошибка при сохранении даты отправления');
+    } finally {
+      setSavingDepartureDate(false);
+    }
+  };
+
+  const handleUpdateArrivalDate = async (routeId: number, arrivalDate: string) => {
+    if (!draftId) return;
+    try {
+      await dispatch(updateRouteArrivalDate({ 
+        speedRequestId: draftId, 
+        routeId, 
+        arrivalDate 
+      })).unwrap();
+      
+      await dispatch(fetchSpeedRequestById(draftId));
+    } catch (error) {
+      console.error('Failed to save arrival date:', error);
+      alert('Ошибка при сохранении даты прибытия');
+    }
+  };
+
+  const handleDeleteRoute = async (routeId: number) => {
+    if (!draftId) return;
+    try {
+      await dispatch(deleteRouteFromSpeedRequest({ 
+        speedRequestId: draftId, 
+        routeId 
+      })).unwrap();
+      await dispatch(fetchSpeedRequestById(draftId));
+    } catch (error) {
+      console.error('Failed to delete route:', error);
+      alert('Ошибка при удалении маршрута');
+    }
+  };
+
+  const handleDeleteRequest = async () => {
+    if (!draftId) return;
+    if (window.confirm('Вы уверены, что хотите удалить эту заявку?')) {
+      try {
+        await dispatch(deleteSpeedRequest(draftId)).unwrap();
+        navigate(ROUTES.ROUTES);
+      } catch (error) {
+        console.error('Failed to delete request:', error);
+        alert('Ошибка при удалении заявки');
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!draftId) return;
+    
+    const allRoutesHaveArrivalDates = routes.every((route) => {
+      if (!route.route_id) return false;
+      return arrivalDates[route.route_id] && arrivalDates[route.route_id].trim() !== '';
+    });
+
+    if (!departureDate || !allRoutesHaveArrivalDates) {
+      alert('Пожалуйста, заполните дату отправления и даты прибытия для всех маршрутов');
+      return;
+    }
+
+    try {
+      await dispatch(submitSpeedRequest(draftId)).unwrap();
+      navigate(`${ROUTES.REQUESTS}/${draftId}`);
+    } catch (error) {
+      console.error('Failed to submit request:', error);
+      alert('Ошибка при формировании заявки');
+    }
+  };
 
   if (!isAuthenticated || !draftId) {
     return null;
@@ -75,48 +165,6 @@ export const DraftPage = () => {
   const routes = current.routes || [];
   const routeReqs = current.route_req || [];
 
-  const handleSaveDepartureDate = async () => {
-    if (!draftId || !departureDate) return;
-    await dispatch(updateSpeedRequestDepartureDate({ id: draftId, departureDate }));
-    await dispatch(fetchSpeedRequestById(draftId));
-  };
-
-  const handleUpdateArrivalDate = async (routeId: number, arrivalDate: string) => {
-    if (!draftId) return;
-    await dispatch(updateRouteArrivalDate({ speedRequestId: draftId, routeId, arrivalDate }));
-    await dispatch(fetchSpeedRequestById(draftId));
-  };
-
-  const handleDeleteRoute = async (routeId: number) => {
-    if (!draftId) return;
-    await dispatch(deleteRouteFromSpeedRequest({ speedRequestId: draftId, routeId }));
-    await dispatch(fetchSpeedRequestById(draftId));
-  };
-
-  const handleDeleteRequest = async () => {
-    if (!draftId) return;
-    if (window.confirm('Вы уверены, что хотите удалить эту заявку?')) {
-      await dispatch(deleteSpeedRequest(draftId));
-      navigate(ROUTES.ROUTES);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!draftId) return;
-    const allRoutesHaveArrivalDates = routes.every((route) => {
-      if (!route.route_id) return false;
-      return arrivalDates[route.route_id] && arrivalDates[route.route_id].trim() !== '';
-    });
-
-    if (!departureDate || !allRoutesHaveArrivalDates) {
-      alert('Пожалуйста, заполните дату отправления и даты прибытия для всех маршрутов');
-      return;
-    }
-
-    await dispatch(submitSpeedRequest(draftId));
-    navigate(`${ROUTES.REQUESTS}/${draftId}`);
-  };
-
   const allRoutesHaveArrivalDates = routes.every((route) => {
     if (!route.route_id) return false;
     return arrivalDates[route.route_id] && arrivalDates[route.route_id].trim() !== '';
@@ -132,6 +180,7 @@ export const DraftPage = () => {
     <div className={styles.mainSpace}>
       <BreadCrumbs crumbs={crumbs} />
       <h3 className={styles.pageTitle}>Черновик заявки #{speedRequest?.id}</h3>
+      
       <div className={styles.departureDate}>
         <div className={styles.dateInputContainer}>
           <h4>Дата отправления:</h4>
@@ -144,10 +193,24 @@ export const DraftPage = () => {
           />
           <Button
             onClick={handleSaveDepartureDate}
-            disabled={!isDraft || !departureDate}
+            disabled={!isDraft || !departureDate || savingDepartureDate}
             className={styles.saveButton}
           >
-            Сохранить
+            {savingDepartureDate ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                Сохранение...
+              </>
+            ) : (
+              'Сохранить'
+            )}
           </Button>
         </div>
       </div>
@@ -204,7 +267,6 @@ export const DraftPage = () => {
                       />
                     </div>
 
-                    {/* Скорость судна (только для завершенных заявок) */}
                     {isCompleted && routeReq?.ship_speed && (
                       <div className={styles.shipSpeed}>
                         <h4>Средняя скорость контейнеровоза:</h4>
@@ -212,7 +274,6 @@ export const DraftPage = () => {
                       </div>
                     )}
 
-                    {/* Кнопка удаления маршрута */}
                     <Button
                       variant="danger"
                       onClick={() => handleDeleteRoute(routeId)}
@@ -229,7 +290,6 @@ export const DraftPage = () => {
         )}
       </div>
 
-      {/* Кнопки действий */}
       {isDraft && (
         <div className={styles.actions}>
           <Button

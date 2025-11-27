@@ -135,6 +135,31 @@ export type RequestParams = Omit<
   "body" | "method" | "query" | "path"
 >;
 
+export interface RequestParamsWithBody extends RequestParams {
+  body?: unknown;
+}
+
+export interface UpdateSpeedRequestParams extends RequestParams {
+  body?: {
+    departure_date?: string;
+  };
+}
+
+export interface UpdateRouteSpeedRequestParams extends RequestParams {
+  body?: {
+    speed_request_id?: number;
+    route_id?: number;
+    arrival_date?: string;
+  };
+}
+
+export interface DeleteRouteSpeedRequestParams extends RequestParams {
+  body?: {
+    speed_request_id?: number;
+    route_id?: number;
+  };
+}
+
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
@@ -504,44 +529,45 @@ export class Api<
       }),
   };
   routespeedrequests = {
-    /**
-     * @description Upadet field arrival date in route speed request. For authentificated users only.
-     *
-     * @tags routespeedrequests
-     * @name RoutespeedrequestsUpdate
-     * @summary Update route speed request
-     * @request PUT:/routespeedrequests
-     * @secure
-     */
-    routespeedrequestsUpdate: (params: RequestParams = {}) =>
-      this.request<object, void>({
-        path: `/routespeedrequests`,
-        method: "PUT",
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+  /**
+   * @description Upadet field arrival date in route speed request. For authentificated users only.
+   *
+   * @tags routespeedrequests
+   * @name RoutespeedrequestsUpdate
+   * @summary Update route speed request
+   * @request PUT:/routespeedrequests
+   * @secure
+   */
+  routespeedrequestsUpdate: (params: UpdateRouteSpeedRequestParams = {}) =>
+    this.request<object, void>({
+      path: `/routespeedrequests`,
+      method: "PUT",
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    }),
 
-    /**
-     * @description Remove route from speed request. For authentificated users only.
-     *
-     * @tags routespeedrequests
-     * @name RoutespeedrequestsDelete
-     * @summary Remove route speed request
-     * @request DELETE:/routespeedrequests
-     * @secure
-     */
-    routespeedrequestsDelete: (params: RequestParams = {}) =>
-      this.request<object, void>({
-        path: `/routespeedrequests`,
-        method: "DELETE",
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+  /**
+   * @description Remove route from speed request. For authentificated users only.
+   *
+   * @tags routespeedrequests
+   * @name RoutespeedrequestsDelete
+   * @summary Remove route speed request
+   * @request DELETE:/routespeedrequests
+   * @secure
+   */
+  routespeedrequestsDelete: (params: DeleteRouteSpeedRequestParams = {}) =>
+    this.request<object, void>({
+      path: `/routespeedrequests`,
+      method: "DELETE",
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    }),
   };
+
   speedrequests = {
     /**
      * @description Get speed requests list. For authentificated users only.
@@ -611,7 +637,7 @@ export class Api<
         ...params,
       }),
 
-    /**
+     /**
      * @description Update speed request. For authentificated users only.
      *
      * @tags speedrequests
@@ -620,7 +646,7 @@ export class Api<
      * @request PUT:/speedrequests/{speed_request_id}
      * @secure
      */
-    speedrequestsUpdate: (speedRequestId: number, params: RequestParams = {}) =>
+    speedrequestsUpdate: (speedRequestId: number, params: UpdateSpeedRequestParams = {}) =>
       this.request<DtoUpdateSpeedRequest, any>({
         path: `/speedrequests/${speedRequestId}`,
         method: "PUT",

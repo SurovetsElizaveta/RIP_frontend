@@ -5,6 +5,7 @@ import type {
   DtoSpeedRequestDetailedResponse,
 } from '../api/api';
 import { logoutUserAsync } from './userSlice';
+import { formatDateForBackend } from '../api/dateFormatter'
 
 export interface SpeedRequestsState {
   draftId: number | null;
@@ -35,7 +36,6 @@ export const fetchDraftInfo = createAsyncThunk(
       const response = await api.speedrequests.draftList();
       const data = response.data as { draft_id?: number | null; count?: number };
       
-      // Используем правильные названия полей из API ответа
       return {
         draftId: data.draft_id ?? null,
         draftCount: data.count ?? 0,
@@ -91,12 +91,23 @@ export const updateSpeedRequestDepartureDate = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
+      const formattedDate = formatDateForBackend(departureDate);
+      
+      if (!formattedDate) {
+        return rejectWithValue('Неверный формат даты');
+      }
+
       await api.speedrequests.speedrequestsUpdate(id, {
-        body: { departure_date: departureDate },
+        body: {
+          departure_date: formattedDate,
+        },
       });
-      return { id, departureDate };
-    } catch (e) {
-      return rejectWithValue('Ошибка при обновлении даты отправления');
+      
+      return { id, departureDate: formattedDate };
+    } catch (e: any) {
+      console.error('Error updating departure date:', e);
+      const errorMessage = e.response?.data?.error || 'Ошибка при обновлении даты отправления';
+      return rejectWithValue(errorMessage);
     }
   },
 );
@@ -112,16 +123,36 @@ export const updateRouteArrivalDate = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
+      const formattedDate = formatDateForBackend(arrivalDate);
+      
+      console.log('🔧 DEBUG Date formatting:', {
+        input: arrivalDate,
+        output: formattedDate,
+        speedRequestId,
+        routeId
+      });
+
       await api.routespeedrequests.routespeedrequestsUpdate({
         body: {
           speed_request_id: speedRequestId,
           route_id: routeId,
-          arrival_date: arrivalDate,
+          arrival_date: formattedDate,
         },
       });
-      return { speedRequestId, routeId, arrivalDate };
-    } catch (e) {
-      return rejectWithValue('Ошибка при обновлении даты прибытия');
+
+      return { speedRequestId, routeId, arrivalDate: formattedDate };
+    } catch (e: any) {
+      console.error('❌ Error updating arrival date:', {
+        error: e.response?.data,
+        status: e.response?.status,
+        requestData: {
+          speed_request_id: speedRequestId,
+          route_id: routeId,
+          arrival_date: formatDateForBackend(arrivalDate)
+        }
+      });
+      const errorMessage = e.response?.data?.error || 'Ошибка при обновлении даты прибытия';
+      return rejectWithValue(errorMessage);
     }
   },
 );
@@ -138,7 +169,7 @@ export const deleteRouteFromSpeedRequest = createAsyncThunk(
           speed_request_id: speedRequestId,
           route_id: routeId,
         },
-      });
+      } as any);
       await dispatch(fetchDraftInfo());
       return { speedRequestId, routeId };
     } catch (e) {

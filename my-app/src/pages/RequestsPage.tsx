@@ -15,6 +15,19 @@ export const RequestsPage = () => {
     dispatch(fetchSpeedRequestsList());
   }, [dispatch]);
 
+  const handleRequestClick = (request: any) => {
+    if (!request.id) return;
+    
+    const isDraft = request.status?.toLowerCase() === 'черновик' || 
+                   request.status?.toLowerCase() === 'draft';
+    
+    if (isDraft) {
+      navigate(ROUTES.DRAFT);
+    } else {
+      navigate(`${ROUTES.REQUESTS}/${request.id}`);
+    }
+  };
+
   return (
     <Container style={{ marginTop: '120px' }}>
       <h2 className="mb-4">Мои заявки</h2>
@@ -37,7 +50,7 @@ export const RequestsPage = () => {
               <tr
                 key={req.id}
                 style={{ cursor: 'pointer' }}
-                onClick={() => req.id && navigate(`${ROUTES.REQUESTS}/${req.id}`)}
+                onClick={() => handleRequestClick(req)}
               >
                 <td>{index + 1}</td>
                 <td>{req.id}</td>
@@ -51,5 +64,3 @@ export const RequestsPage = () => {
     </Container>
   );
 };
-
-

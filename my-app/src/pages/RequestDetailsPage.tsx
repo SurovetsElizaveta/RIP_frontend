@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
 import { fetchSpeedRequestById } from '../slices/speedRequestsSlice';
-import { Container, Spinner, Table } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 import { ROUTES } from '../routes';
+import styles from './RequestDetailsPage.module.css';
 
 export const RequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,53 +23,128 @@ export const RequestDetailsPage = () => {
 
   if (loadingCurrent || !current) {
     return (
-      <div className="d-flex justify-content-center py-5">
+      <div className={styles.loadingContainer}>
         <Spinner animation="border" />
       </div>
     );
   }
 
+  const speedRequest = current.speed_request;
+  const routes = current.routes || [];
+  const routeReqs = current.route_req || [];
+
   const crumbs = [
     { label: 'Мои заявки', path: ROUTES.REQUESTS },
-    { label: `Заявка #${current.speed_request?.id}` },
+    { label: `Заявка #${speedRequest?.id}` },
   ];
 
   return (
-    <Container style={{ marginTop: '120px' }}>
+    <div className={styles.mainSpace}>
       <BreadCrumbs crumbs={crumbs} />
-      <h2 className="mb-3">Заявка #{current.speed_request?.id}</h2>
-      <p>Статус: {current.speed_request?.status}</p>
-      <p>Дата создания: {current.speed_request?.creation_date}</p>
-      <p>Дата отправления: {current.speed_request?.departure_date}</p>
+      <h2 className={styles.pageTitle}>Заявка #{speedRequest?.id}</h2>
+      
+      <div className={styles.statusSection}>
+        <div className={styles.dateContainer}>
+          <h4>Статус:</h4>
+          <div className={styles.statusBadge}>
+            {speedRequest?.status}
+          </div>
+        </div>
+      </div>
 
-      <h4 className="mt-4 mb-3">Маршруты</h4>
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Маршрут</th>
-            <th>Расстояние</th>
-            <th>Дата прибытия</th>
-            <th>Скорость судна</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(current.routes || []).map((route, index) => {
-            const routeReq = (current.route_req || [])[index];
+      <div className={styles.departureDate}>
+        <div className={styles.dateContainer}>
+          <h4>Дата создания:</h4>
+          <div className={styles.dateValue}>
+            {speedRequest?.creation_date}
+          </div>
+        </div>
+      </div>
+
+      {speedRequest?.departure_date && (
+        <div className={styles.departureDate}>
+          <div className={styles.dateContainer}>
+            <h4>Дата отправления:</h4>
+            <div className={styles.dateValue}>
+              {speedRequest.departure_date}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {speedRequest?.formation_date && (
+        <div className={styles.departureDate}>
+          <div className={styles.dateContainer}>
+            <h4>Дата формирования:</h4>
+            <div className={styles.dateValue}>
+              {speedRequest.formation_date}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {speedRequest?.completion_date && (
+        <div className={styles.departureDate}>
+          <div className={styles.dateContainer}>
+            <h4>Дата завершения:</h4>
+            <div className={styles.dateValue}>
+              {speedRequest.completion_date}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <h3 className={styles.routesTitle}>Маршруты</h3>
+      
+      {routes.length === 0 ? (
+        <div className={styles.emptyState}>
+          Нет маршрутов в заявке
+        </div>
+      ) : (
+        <div className={styles.routesList}>
+          {routes.map((route, index) => {
+            const routeReq = routeReqs[index];
+            const isCompleted = speedRequest?.status === 'завершена' || 
+                              speedRequest?.status === 'completed';
+
             return (
-              <tr key={route.route_id}>
-                <td>{index + 1}</td>
-                <td>{route.title}</td>
-                <td>{route.distance}</td>
-                <td>{routeReq?.arrival_date}</td>
-                <td>{routeReq?.ship_speed}</td>
-              </tr>
+              <div key={route.route_id} className={styles.route}>
+                <div className={styles.routeImg}>
+                  <img
+                    src={route.image_url || '/images/default_route.svg'}
+                    alt={route.title}
+                    className={styles.routeImage}
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/default_route.svg';
+                    }}
+                  />
+                </div>
+                <div className={styles.routeInfo}>
+                  <h4>{route.title}, {route.distance} км</h4>
+                </div>
+
+                <div className={styles.routeArrivalInfo}>
+                  {routeReq?.arrival_date && (
+                    <div className={styles.arrivalDateContainer}>
+                      <h4 className={styles.arrivalDateLabel}>Дата прибытия:</h4>
+                      <div className={styles.dateValue}>
+                        {routeReq.arrival_date}
+                      </div>
+                    </div>
+                  )}
+
+                  {isCompleted && routeReq?.ship_speed && (
+                    <div className={styles.shipSpeed}>
+                      <h4>Средняя скорость контейнеровоза:</h4>
+                      <h4 className={styles.speedValue}>{routeReq.ship_speed} узл.</h4>
+                    </div>
+                  )}
+                </div>
+              </div>
             );
           })}
-        </tbody>
-      </Table>
-    </Container>
+        </div>
+      )}
+    </div>
   );
 };
-
-
