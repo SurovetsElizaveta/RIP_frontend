@@ -124,13 +124,6 @@ export const updateRouteArrivalDate = createAsyncThunk(
   ) => {
     try {
       const formattedDate = formatDateForBackend(arrivalDate);
-      
-      console.log('🔧 DEBUG Date formatting:', {
-        input: arrivalDate,
-        output: formattedDate,
-        speedRequestId,
-        routeId
-      });
 
       await api.routespeedrequests.routespeedrequestsUpdate({
         body: {
@@ -142,15 +135,6 @@ export const updateRouteArrivalDate = createAsyncThunk(
 
       return { speedRequestId, routeId, arrivalDate: formattedDate };
     } catch (e: any) {
-      console.error('❌ Error updating arrival date:', {
-        error: e.response?.data,
-        status: e.response?.status,
-        requestData: {
-          speed_request_id: speedRequestId,
-          route_id: routeId,
-          arrival_date: formatDateForBackend(arrivalDate)
-        }
-      });
       const errorMessage = e.response?.data?.error || 'Ошибка при обновлении даты прибытия';
       return rejectWithValue(errorMessage);
     }

@@ -540,7 +540,7 @@ export class Api<
    */
   routespeedrequestsUpdate: (params: UpdateRouteSpeedRequestParams = {}) =>
     this.request<object, void>({
-      path: `/routespeedrequests`,
+      path: `/routespeedrequest`,
       method: "PUT",
       secure: true,
       type: ContentType.Json,
@@ -559,7 +559,7 @@ export class Api<
    */
   routespeedrequestsDelete: (params: DeleteRouteSpeedRequestParams = {}) =>
     this.request<object, void>({
-      path: `/routespeedrequests`,
+      path: `/routespeedrequest`,
       method: "DELETE",
       secure: true,
       type: ContentType.Json,

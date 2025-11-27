@@ -29,6 +29,7 @@ export const DraftPage = () => {
   const [departureDate, setDepartureDate] = useState('');
   const [arrivalDates, setArrivalDates] = useState<Record<number, string>>({});
   const [savingDepartureDate, setSavingDepartureDate] = useState(false);
+  const [savingArrivalDates, setSavingArrivalDates] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     if (!isAuthenticated || !draftId) {
@@ -67,11 +68,8 @@ export const DraftPage = () => {
         id: draftId, 
         departureDate 
       })).unwrap();
-      
-      await dispatch(fetchSpeedRequestById(draftId));
     } catch (error) {
       console.error('Failed to save departure date:', error);
-      alert('Ошибка при сохранении даты отправления');
     } finally {
       setSavingDepartureDate(false);
     }
@@ -79,17 +77,30 @@ export const DraftPage = () => {
 
   const handleUpdateArrivalDate = async (routeId: number, arrivalDate: string) => {
     if (!draftId) return;
+
+    const previousDate = arrivalDates[routeId];
+    setArrivalDates(prev => ({
+      ...prev,
+      [routeId]: arrivalDate
+    }));
+    
+    setSavingArrivalDates(prev => ({ ...prev, [routeId]: true }));
+    
     try {
       await dispatch(updateRouteArrivalDate({ 
         speedRequestId: draftId, 
         routeId, 
         arrivalDate 
       })).unwrap();
-      
-      await dispatch(fetchSpeedRequestById(draftId));
     } catch (error) {
       console.error('Failed to save arrival date:', error);
-      alert('Ошибка при сохранении даты прибытия');
+
+      setArrivalDates(prev => ({
+        ...prev,
+        [routeId]: previousDate
+      }));
+    } finally {
+      setSavingArrivalDates(prev => ({ ...prev, [routeId]: false }));
     }
   };
 
@@ -109,14 +120,12 @@ export const DraftPage = () => {
 
   const handleDeleteRequest = async () => {
     if (!draftId) return;
-    if (window.confirm('Вы уверены, что хотите удалить эту заявку?')) {
-      try {
-        await dispatch(deleteSpeedRequest(draftId)).unwrap();
-        navigate(ROUTES.ROUTES);
-      } catch (error) {
-        console.error('Failed to delete request:', error);
-        alert('Ошибка при удалении заявки');
-      }
+    try {
+      await dispatch(deleteSpeedRequest(draftId)).unwrap();
+      navigate(ROUTES.ROUTES);
+    } catch (error) {
+      console.error('Failed to delete request:', error);
+      alert('Ошибка при удалении заявки');
     }
   };
 
@@ -188,7 +197,7 @@ export const DraftPage = () => {
             type="date"
             value={departureDate}
             onChange={(e) => setDepartureDate(e.target.value)}
-            disabled={!isDraft}
+            disabled={!isDraft || savingDepartureDate}
             className={styles.dateInput}
           />
           <Button
@@ -229,6 +238,7 @@ export const DraftPage = () => {
 
               const currentArrivalDate = arrivalDates[routeId] || '';
               const isCompleted = speedRequest?.status === 'завершена' || speedRequest?.status === 'completed';
+              const isSaving = savingArrivalDates[routeId];
 
               return (
                 <div key={routeId} className={styles.route}>
@@ -249,22 +259,31 @@ export const DraftPage = () => {
                   <div className={styles.routeArrivalInfo}>
                     <div className={styles.arrivalDateContainer}>
                       <h4 className={styles.arrivalDateLabel}>Дата прибытия:</h4>
-                      <Form.Control
-                        type="date"
-                        value={currentArrivalDate}
-                        onChange={(e) => {
-                          const newDate = e.target.value;
-                          setArrivalDates({ ...arrivalDates, [routeId]: newDate });
-                        }}
-                        onBlur={(e) => {
-                          const newDate = e.target.value;
-                          if (newDate && newDate !== (routeReqs[index]?.arrival_date || '')) {
-                            handleUpdateArrivalDate(routeId, newDate);
-                          }
-                        }}
-                        disabled={!isDraft}
-                        className={styles.dateInput}
-                      />
+                      <div className={styles.dateInputWrapper}>
+                        <Form.Control
+                          type="date"
+                          value={currentArrivalDate}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            setArrivalDates(prev => ({ ...prev, [routeId]: newDate }));
+                          }}
+                          onBlur={(e) => {
+                            const newDate = e.target.value;
+                            if (newDate && newDate !== currentArrivalDate) {
+                              handleUpdateArrivalDate(routeId, newDate);
+                            }
+                          }}
+                          disabled={!isDraft || isSaving}
+                          className={styles.dateInput}
+                        />
+                        {isSaving && (
+                          <Spinner 
+                            animation="border" 
+                            size="sm" 
+                            className={styles.savingSpinner} 
+                          />
+                        )}
+                      </div>
                     </div>
 
                     {isCompleted && routeReq?.ship_speed && (
