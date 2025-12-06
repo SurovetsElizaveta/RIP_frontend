@@ -49,9 +49,20 @@ export const fetchDraftInfo = createAsyncThunk(
 
 export const fetchSpeedRequestsList = createAsyncThunk(
   'speedRequests/fetchSpeedRequestsList',
-  async (_, { rejectWithValue }) => {
+  async (
+    params: { 
+      dateFrom?: string;
+      dateTo?: string;
+      status?: string;
+    } = {}, 
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await api.speedrequests.speedrequestsList();
+      const response = await api.speedrequests.speedrequestsList({
+        date_from: params.dateFrom ? formatDateForBackend(params.dateFrom) : undefined,
+        date_to: params.dateTo ? formatDateForBackend(params.dateTo) : undefined,
+        status: params.status,
+      });
       return (response.data ?? []) as DtoSpeedRequest[];
     } catch (e) {
       return rejectWithValue('Ошибка при загрузке заявок');

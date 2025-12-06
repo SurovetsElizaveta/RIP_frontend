@@ -11,35 +11,53 @@ export const RequestLink: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { draftCount, draftId } = useSelector((state: RootState) => state.speedRequests);
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
 
   useEffect(() => {
-    dispatch(fetchDraftInfo());
-  }, [dispatch]);
+    if (isAuthenticated) {
+      dispatch(fetchDraftInfo());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const hasItems = draftCount > 0;
 
   const handleClick = () => {
-    if (!draftId) return;
-    navigate(ROUTES.DRAFT);
+    if (!isAuthenticated) {
+      navigate(ROUTES.LOGIN);
+      return;
+    }
+    
+    if (draftId) {
+      // Если есть черновик - переходим на его страницу
+      navigate(`${ROUTES.REQUESTS}/${draftId}`);
+    } else {
+      // Если нет черновика - переходим на список заявок
+      navigate(ROUTES.REQUESTS);
+    }
   };
+
+  // Если пользователь не авторизован, не показываем счетчик
+  const showBadge = isAuthenticated && draftCount > 0;
 
   return (
     <Button 
       className={`${styles['requestLink']} ${hasItems ? styles['requestLinkFilled'] : styles['requestLinkEmpty']}`}
       onClick={handleClick}
-      disabled={!draftId}
+      disabled={!isAuthenticated}
     >
       <img 
         src={hasItems ? "./images/sea_request.svg" : "./images/sea_request_null.svg"} 
         alt="request"
         className={styles['requestIcon']}
       />
-      <Badge 
-        bg="#FFFFFF"
-        className={styles['requestCounter']}
-      >
-        {draftCount}
-      </Badge>
+      {showBadge && (
+        <Badge 
+          bg="#FFFFFF"
+          className={styles['requestCounter']}
+        >
+          {draftCount}
+        </Badge>
+      )}
     </Button>
   );
 };

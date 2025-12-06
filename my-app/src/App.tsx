@@ -8,7 +8,6 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { RequestsPage } from './pages/RequestsPage';
 import { RequestDetailsPage } from './pages/RequestDetailsPage';
-import { DraftPage } from './pages/DraftPage';
 import { ROUTES } from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -26,7 +25,7 @@ function App() {
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
           <Route path={ROUTES.REQUEST_DETAILS} element={<RequestDetailsPage />} />
-          <Route path={ROUTES.DRAFT} element={<DraftPage />} />
+          {/* Удали маршрут для DRAFT, т.к. черновики теперь открываются через REQUEST_DETAILS */}
         </Routes>
       </div>
     </Router>

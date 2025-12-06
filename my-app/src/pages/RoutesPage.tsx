@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { RouteCard } from '../components/RouteCard';
 import { RequestLink } from '../components/RequestLink';
 import { FilterBar } from '../components/FilterBar';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 import styles from './Routes.module.css';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,9 +13,21 @@ import type { AppDispatch, RootState } from '../store';
 import { Spinner } from 'react-bootstrap';
 
 export const RoutesPage: FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
   const { items: routes, loadingList } = useSelector((state: RootState) => state.routes);
+
+  useEffect(() => {
+    const hasFilters = searchParams.has('min_distance') || searchParams.has('max_distance');
+    
+    if (hasFilters) {
+      searchParams.delete('min_distance');
+      searchParams.delete('max_distance');
+      setSearchParams(searchParams);
+      dispatch(setMinDistanceAction(''));
+      dispatch(setMaxDistanceAction(''));
+    }
+  }, []);
 
   const fetchRoutes = async () => {
     const min = searchParams.get('min_distance');

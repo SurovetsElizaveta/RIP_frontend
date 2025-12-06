@@ -137,6 +137,318 @@
     border-radius: 0px;
     font-weight: 500;
   }
+
+  .mainSpace {
+    margin: 0px 180px 0px 180px;
+    position: relative;
+    padding-top: 80px;
+    padding-left: 60px !important;
+  }
+  
+  .pageTitle {
+    margin-bottom: 2rem;
+    color: #001E42;
+  }
+  
+  .dateInputContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .dateInputContainer h4 {
+    margin: 0;
+    color: #001E42;
+  }
+  
+  .dateInput {
+    width: auto !important;
+    min-width: 150px;
+    height: 40px;
+    border: none !important;
+    border-radius: 0px;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .dateInput:focus {
+    border-color: #FE991F !important;
+    box-shadow: none !important;
+  }
+  
+  .saveButton {
+    padding: 10px 24px !important;
+    background-color: #FE991F !important;
+    border: 1px solid transparent !important;
+    border-radius: 0px !important;
+    font-size: 14px;
+    font-weight: 450;
+    color: #FFFFFF !important;
+    white-space: nowrap;
+  }
+  
+  .saveButton:hover:not(:disabled) {
+    background-color: transparent !important;
+    border: 1px solid #FE991F !important;
+    border-radius: 0px !important;
+    color: #FE991F !important;
+  }
+  
+  .saveButton:disabled {
+    background-color: transparent !important;
+    border: 1px solid #FE991F !important;
+    border-radius: 0px !important;
+    color: #FE991F !important;
+  }
+  
+  .routesTitle {
+    margin-bottom: 1.5rem;
+    color: #001E42;
+  }
+  
+  .routesList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .route {
+    display: flex;
+    gap: 1.5rem;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 0px;
+  }
+  
+  .routeImg {
+    flex: 0 0 200px;
+  }
+  
+  .routeImage {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0px;
+  }
+  
+  .routeInfo {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .routeInfo h4 {
+    margin: 0;
+    color: #001E42;
+  }
+  
+  .routeArrivalInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  
+  .arrivalDateContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .arrivalDateLabel {
+    margin: 0;
+    color: #001E42;
+    white-space: nowrap;
+  }
+  
+  .shipSpeed {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .shipSpeed h4 {
+    margin: 0;
+    color: #001E42;
+  }
+  
+  .speedValue {
+    color: #FE991F !important;
+    font-weight: 500 !important;
+  }
+  
+  .deleteRouteButton {
+    padding: 10px 24px !important;
+    background-color: #FE991F !important;
+    border: 1px solid transparent !important;
+    border-radius: 0px !important;
+    font-size: 14px;
+    font-weight: 450;
+    color: #FFFFFF !important;
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+  
+  .deleteRouteButton:hover:not(:disabled) {
+    background-color: transparent !important;
+    border: 1px solid #FE991F !important;
+    border-radius: 0px !important;
+    color: #FE991F !important;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 1rem;
+    padding: 10px 0px 20px 0px;
+    align-items: end;
+    justify-content: end;
+  }
+  
+  .submitButton {
+    padding: 10px 24px !important;
+    background-color: #FE991F !important;
+    border: 1px solid transparent !important;
+    border-radius: 0px !important;
+    font-size: 14px;
+    font-weight: 450;
+    color: #FFFFFF !important;
+  }
+  
+  .submitButton:hover:not(:disabled) {
+    background-color: transparent !important;
+    border: 1px solid #FE991F !important;
+    border-radius: 0px !important;
+    color: #FE991F !important;
+  }
+  
+  .submitButton:disabled {
+    background-color: transparent !important;
+    border: 1px solid #FE991F !important;
+    border-radius: 0px !important;
+    color: #FE991F !important;
+  }
+  
+  .deleteButton {
+    padding: 10px 24px !important;
+    background-color: #09388A !important;
+    border: 1px solid transparent !important;
+    border-radius: 0px !important;
+    font-size: 14px;
+    font-weight: 450;
+    color: #FFFFFF !important;
+  }
+  
+  .deleteButton:hover {
+    background-color: transparent !important;
+    border: 1px solid #09388A !important;
+    border-radius: 0px !important;
+    color: #09388A !important;
+  }
+  
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0;
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: 2rem;
+    color: gray;
+    background-color: lightgray;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 1200px) {
+    .mainSpace {
+      margin: 0px 120px 0px 120px;
+      padding-top: 70px;
+      padding-left: 40px !important;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .mainSpace {
+      margin: 0px 80px 0px 80px;
+      padding-top: 60px;
+      padding-left: 30px !important;
+    }
+    
+    .route {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .routeImg {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mainSpace {
+      margin: 0px 20px 0px 20px;
+      padding-top: 60px;
+      padding-left: 0 !important;
+    }
+    
+    .dateInputContainer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .arrivalDateContainer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .actions {
+      flex-direction: column;
+    }
+    
+    .submitButton,
+    .deleteButton {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 545px) {
+    .mainSpace {
+      margin: 0px 15px 0px 15px;
+      padding-top: 50px;
+    }
+    
+    .routeImg {
+      max-width: 100%;
+    }
+    
+    .dateInput {
+      width: 100% !important;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .mainSpace {
+      margin: 0px 10px 0px 10px;
+      padding-top: 45px;
+    }
+    
+    .route {
+      padding: 1rem;
+    }
+    
+    .shipSpeed {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
   
   @media (max-width: 1200px) {
     .mainSpace {
