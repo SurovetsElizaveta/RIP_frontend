@@ -7,6 +7,8 @@ import type {
 import { logoutUserAsync } from './userSlice';
 import { formatDateForBackend } from '../api/dateFormatter'
 
+export type SpeedRequestStatus = 'сформирована' | 'завершена' | 'отклонена' | string;
+
 export interface SpeedRequestsState {
   draftId: number | null;
   draftCount: number;
@@ -199,6 +201,34 @@ export const submitSpeedRequest = createAsyncThunk(
   },
 );
 
+export const completeSpeedRequest = createAsyncThunk(
+  'speedRequests/completeSpeedRequest',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await api.speedrequests.completeUpdate(id);
+      return id;
+    } catch (e) {
+      return rejectWithValue('Ошибка при завершении заявки');
+    }
+  },
+);
+
+export const rejectSpeedRequest = createAsyncThunk(
+  'speedRequests/rejectSpeedRequest',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await api.speedrequests.speedrequestsUpdate(id, {
+        body: {
+          status: 'отклонена',
+        } as any,
+      });
+      return id;
+    } catch (e) {
+      return rejectWithValue('Ошибка при отклонении заявки');
+    }
+  },
+);
+
 const speedRequestsSlice = createSlice({
   name: 'speedRequests',
   initialState,
@@ -249,6 +279,36 @@ const speedRequestsSlice = createSlice({
         state.loadingCurrent = false;
         state.error =
           (action.payload as string) ?? 'Ошибка при загрузке заявки';
+      })
+      .addCase(completeSpeedRequest.fulfilled, (state, action) => {
+        const id = action.payload;
+        state.list = state.list.map((req) =>
+          req.id === id ? { ...req, status: 'завершена' } : req,
+        );
+        if (state.current?.speed_request?.id === id) {
+          state.current = {
+            ...state.current,
+            speed_request: {
+              ...state.current.speed_request,
+              status: 'завершена',
+            },
+          };
+        }
+      })
+      .addCase(rejectSpeedRequest.fulfilled, (state, action) => {
+        const id = action.payload;
+        state.list = state.list.map((req) =>
+          req.id === id ? { ...req, status: 'отклонена' } : req,
+        );
+        if (state.current?.speed_request?.id === id) {
+          state.current = {
+            ...state.current,
+            speed_request: {
+              ...state.current.speed_request,
+              status: 'отклонена',
+            },
+          };
+        }
       })
       .addCase(logoutUserAsync.fulfilled, (state) => {
         state.draftId = null;

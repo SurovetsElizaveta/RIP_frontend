@@ -14,7 +14,7 @@ export const Header: FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, username, loading } = useSelector(
+  const { isAuthenticated, username, loading, isModerator } = useSelector(
     (state: RootState) => state.user,
   );
 
@@ -34,7 +34,7 @@ export const Header: FC = () => {
   return (
     <Navbar className={styles['custom-header']} fixed="top">
       <Container fluid className={styles['header-container']}>
-      <div className={styles['header-left']}>
+        <div className={styles['header-left']}>
           <Navbar.Brand
             as={Link}
             to={ROUTES.HOME}
@@ -66,7 +66,7 @@ export const Header: FC = () => {
                 to={ROUTES.REQUESTS}
                 className={styles['nav-link']}
               >
-                Мои заявки
+                {isModerator ? 'Все заявки' : 'Мои заявки'}
               </Nav.Link>
             )}
           </Nav>
@@ -94,7 +94,7 @@ export const Header: FC = () => {
             </div>
           ) : (
             <Button
-            className={styles['sign-button']}
+              className={styles['sign-button']}
               onClick={() => navigate(ROUTES.LOGIN)}
             >
               Войти
@@ -131,7 +131,7 @@ export const Header: FC = () => {
                   className={styles['nav-link']}
                   onClick={closeMobileMenu}
                 >
-                  Мои заявки
+                  {isModerator ? 'Все заявки' : 'Мои заявки'}
                 </Nav.Link>
               )}
             </div>

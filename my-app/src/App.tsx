@@ -1,4 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from './store';
+import { restoreUserSessionAsync } from './slices/userSlice';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { RoutesPage } from './pages/RoutesPage';
@@ -12,6 +16,13 @@ import { ROUTES } from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    // Восстанавливаем сессию пользователя при загрузке приложения
+    dispatch(restoreUserSessionAsync());
+  }, [dispatch]);
+
   return (
     <Router>
       <div className="App">

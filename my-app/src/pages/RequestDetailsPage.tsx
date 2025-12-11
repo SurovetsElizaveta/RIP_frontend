@@ -63,7 +63,6 @@ export const RequestDetailsPage = () => {
     }
   }, [current]);
 
-  // Проверяем, является ли заявка черновиком
   const isDraft = () => {
     const status = current?.speed_request?.status?.toLowerCase();
     return status === 'черновик' || status === 'draft';
@@ -78,7 +77,6 @@ export const RequestDetailsPage = () => {
         id: parseInt(id, 10), 
         departureDate 
       })).unwrap();
-      // Обновляем данные
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to save departure date:', error);
@@ -87,15 +85,15 @@ export const RequestDetailsPage = () => {
     }
   };
 
-  const handleUpdateArrivalDate = async (routeId: number, arrivalDate: string) => {
+  const handleUpdateArrivalDate = async (routeId: number) => {
     if (!id) return;
 
-    const previousDate = arrivalDates[routeId];
-    setArrivalDates(prev => ({
-      ...prev,
-      [routeId]: arrivalDate
-    }));
-    
+    const arrivalDate = arrivalDates[routeId];
+    if (!arrivalDate) {
+      alert('Пожалуйста, выберите дату прибытия');
+      return;
+    }
+
     setSavingArrivalDates(prev => ({ ...prev, [routeId]: true }));
     
     try {
@@ -104,15 +102,10 @@ export const RequestDetailsPage = () => {
         routeId, 
         arrivalDate 
       })).unwrap();
-      // Обновляем данные
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to save arrival date:', error);
-      // Восстанавливаем предыдущее значение
-      setArrivalDates(prev => ({
-        ...prev,
-        [routeId]: previousDate
-      }));
+      alert('Ошибка при сохранении даты прибытия');
     } finally {
       setSavingArrivalDates(prev => ({ ...prev, [routeId]: false }));
     }
@@ -125,7 +118,6 @@ export const RequestDetailsPage = () => {
         speedRequestId: parseInt(id, 10), 
         routeId 
       })).unwrap();
-      // Обновляем данные
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to delete route:', error);
@@ -160,7 +152,6 @@ export const RequestDetailsPage = () => {
 
     try {
       await dispatch(submitSpeedRequest(parseInt(id, 10))).unwrap();
-      // После успешной отправки обновляем страницу
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to submit request:', error);
@@ -185,7 +176,6 @@ export const RequestDetailsPage = () => {
   const routeReqs = current.route_req || [];
   const draft = isDraft();
 
-  // Проверяем можно ли отправить заявку (только для черновиков)
   const allRoutesHaveArrivalDates = routes.every((route) => {
     if (!route.route_id) return false;
     return arrivalDates[route.route_id] && arrivalDates[route.route_id].trim() !== '';
@@ -197,100 +187,87 @@ export const RequestDetailsPage = () => {
     { label: `Заявка #${speedRequest?.id}` },
   ];
 
+  const formatDatesLine = () => {
+    const parts = [];
+    
+    if (speedRequest?.creation_date) {
+      parts.push(`Создание: ${speedRequest.creation_date}`);
+    }
+    
+    if (speedRequest?.departure_date) {
+      parts.push(`Отправление: ${speedRequest.departure_date}`);
+    }
+    
+    if (speedRequest?.formation_date) {
+      parts.push(`Формирование: ${speedRequest.formation_date}`);
+    }
+    
+    if (speedRequest?.completion_date) {
+      parts.push(`Завершение: ${speedRequest.completion_date}`);
+    }
+    
+    return parts.join(' • ');
+  };
+
   return (
     <div className={styles.mainSpace}>
       <BreadCrumbs crumbs={crumbs} />
       <h2 className={styles.pageTitle}>
         {draft ? 'Черновик заявки' : 'Заявка'} #{speedRequest?.id}
       </h2>
-      
-      {/* Статус заявки */}
       <div className={styles.statusSection}>
-        <div className={styles.dateContainer}>
-          <h4>Статус:</h4>
+        <div className={styles.statusContainer}>
+          <h4 className={styles.statusTitle}>Статус:</h4>
           <div className={styles.statusBadge}>
             {speedRequest?.status}
           </div>
         </div>
       </div>
 
-      {/* Даты заявки */}
-      <div className={styles.departureDate}>
-        <div className={styles.dateContainer}>
-          <h4>Дата создания:</h4>
-          <div className={styles.dateValue}>
-            {speedRequest?.creation_date}
-          </div>
-        </div>
+      <div className={styles.datesRow}>
+        <span className={styles.datesLine}>
+          {formatDatesLine()}
+        </span>
       </div>
 
-      {speedRequest?.departure_date && (
-        <div className={styles.departureDate}>
-          <div className={styles.dateContainer}>
-            <h4>Дата отправления:</h4>
-            {draft ? (
-              <div className={styles.dateInputContainer}>
-                <Form.Control
-                  type="date"
-                  value={departureDate}
-                  onChange={(e) => setDepartureDate(e.target.value)}
-                  disabled={!draft || savingDepartureDate}
-                  className={styles.dateInput}
-                />
-                <Button
-                  onClick={handleSaveDepartureDate}
-                  disabled={!draft || !departureDate || savingDepartureDate}
-                  className={styles.saveButton}
-                >
-                  {savingDepartureDate ? (
-                    <>
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                        className="me-2"
-                      />
-                      Сохранение...
-                    </>
-                  ) : (
-                    'Сохранить'
-                  )}
-                </Button>
-              </div>
-            ) : (
-              <div className={styles.dateValue}>
-                {speedRequest.departure_date}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {speedRequest?.formation_date && (
-        <div className={styles.departureDate}>
-          <div className={styles.dateContainer}>
-            <h4>Дата формирования:</h4>
-            <div className={styles.dateValue}>
-              {speedRequest.formation_date}
+      {draft && !speedRequest?.departure_date && (
+        <div className={styles.departureDateEdit}>
+          <div className={styles.dateEditContainer}>
+            <h4 className={styles.dateEditLabel}>Дата отправления:</h4>
+            <div className={styles.dateInputContainer}>
+              <Form.Control
+                type="date"
+                value={departureDate}
+                onChange={(e) => setDepartureDate(e.target.value)}
+                disabled={!draft || savingDepartureDate}
+                className={styles.dateInput}
+              />
+              <Button
+                onClick={handleSaveDepartureDate}
+                disabled={!draft || !departureDate || savingDepartureDate}
+                className={styles.saveButton}
+              >
+                {savingDepartureDate ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Сохранение...
+                  </>
+                ) : (
+                  'Сохранить'
+                )}
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      {speedRequest?.completion_date && (
-        <div className={styles.departureDate}>
-          <div className={styles.dateContainer}>
-            <h4>Дата завершения:</h4>
-            <div className={styles.dateValue}>
-              {speedRequest.completion_date}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Маршруты */}
       <h3 className={styles.routesTitle}>Маршруты</h3>
       
       {routes.length === 0 ? (
@@ -322,15 +299,14 @@ export const RequestDetailsPage = () => {
                   />
                 </div>
                 <div className={styles.routeInfo}>
-                  <h4>{route.title}, {route.distance} км</h4>
+                  <h4 className={styles.routeTitle}>{route.title}, {route.distance} км</h4>
                 </div>
 
-                <div className={styles.routeArrivalInfo}>
-                  {/* Дата прибытия */}
+                <div className={styles.routeRightPanel}>
                   <div className={styles.arrivalDateContainer}>
                     <h4 className={styles.arrivalDateLabel}>Дата прибытия:</h4>
                     {draft ? (
-                      <div className={styles.dateInputWrapper}>
+                      <div className={styles.arrivalDateControls}>
                         <Form.Control
                           type="date"
                           value={currentArrivalDate}
@@ -338,22 +314,28 @@ export const RequestDetailsPage = () => {
                             const newDate = e.target.value;
                             setArrivalDates(prev => ({ ...prev, [routeId]: newDate }));
                           }}
-                          onBlur={(e) => {
-                            const newDate = e.target.value;
-                            if (newDate && newDate !== currentArrivalDate) {
-                              handleUpdateArrivalDate(routeId, newDate);
-                            }
-                          }}
                           disabled={!draft || isSaving}
                           className={styles.dateInput}
                         />
-                        {isSaving && (
-                          <Spinner 
-                            animation="border" 
-                            size="sm" 
-                            className={styles.savingSpinner} 
-                          />
-                        )}
+                        <Button
+                          variant="outline-success"
+                          onClick={() => handleUpdateArrivalDate(routeId)}
+                          disabled={!draft || !currentArrivalDate || isSaving}
+                          className={styles.saveArrivalButton}
+                          title="Сохранить дату прибытия"
+                        >
+                          {isSaving ? (
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            '✓'
+                          )}
+                        </Button>
                       </div>
                     ) : routeReq?.arrival_date ? (
                       <div className={styles.dateValue}>
@@ -362,15 +344,13 @@ export const RequestDetailsPage = () => {
                     ) : null}
                   </div>
 
-                  {/* Скорость корабля (только для завершенных) */}
-                  {isCompleted && routeReq?.ship_speed && (
-                    <div className={styles.shipSpeed}>
-                      <h4>Средняя скорость контейнеровоза:</h4>
-                      <h4 className={styles.speedValue}>{routeReq.ship_speed} узл.</h4>
-                    </div>
-                  )}
+                  <div className={styles.shipSpeedContainer}>
+                    <h4 className={styles.shipSpeedLabel}>Скорость контейнеровоза:</h4>
+                    <h4 className={styles.speedValue}>
+                      {routeReq?.ship_speed ? `${routeReq.ship_speed} узл.` : '—'}
+                    </h4>
+                  </div>
 
-                  {/* Кнопка удаления маршрута (только для черновиков) */}
                   {draft && (
                     <Button
                       variant="danger"
@@ -388,7 +368,6 @@ export const RequestDetailsPage = () => {
         </div>
       )}
 
-      {/* Кнопки действий (только для черновиков) */}
       {draft && (
         <div className={styles.actions}>
           <Button

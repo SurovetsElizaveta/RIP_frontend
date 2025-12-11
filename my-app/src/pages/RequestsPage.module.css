@@ -9,12 +9,11 @@
   margin-bottom: 2rem;
   color: #001E42;
   font-size: 2rem;
-  font-weight: 600;
 }
 
 .filterCard {
-    display: flex;
-    align-items: start;
+  display: flex;
+  align-items: start;
   border: none !important;
   background-color: transparent !important;
   border-radius: 0px !important;
@@ -26,10 +25,28 @@
   font-weight: 500;
 }
 
+.statusSelect {
+  border: none !important;
+  border-radius: 0px !important;
+  height: 40px;
+}
+
+.dateInput {
+  border: none !important;
+  border-radius: 0px !important;
+  height: 40px;
+}
+
+.loginInput {
+  border: none !important;
+  border-radius: 0px !important;
+  height: 40px;
+}
+
 .filterCard .form-select,
 .filterCard .form-control {
-  border: none;
-  border-radius: 0px;
+  border: none !important;
+  border-radius: 0px !important;
   height: 40px;
 }
 
@@ -38,6 +55,7 @@
   border-color: #FE991F !important;
   box-shadow: none !important;
   background-color: #FFFFFF;
+  border-radius: 0px !important;
 }
 
 .applyButton {
@@ -50,6 +68,9 @@
   color: #FFFFFF !important;
   height: 40px;
   white-space: nowrap;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .applyButton:hover:not(:disabled) {
@@ -98,7 +119,6 @@
   width: 100%;
 }
 
-
 .cardBody {
   padding: 1.25rem !important;
 }
@@ -106,15 +126,21 @@
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 0.75rem;
   color: #001E42;
 }
 
-.headerLeft,
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
 .headerRight {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .cardTitle {
@@ -134,8 +160,8 @@
 }
 
 .datesRow {
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #F0F0F0;
 }
 
@@ -179,10 +205,67 @@
   border: none !important;
 }
 
+.statusActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.completeButton {
+  background-color: #09388A !important;
+  border-color: #09388A !important;
+  color: #FFFFFF !important;
+  border-radius: 0px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+.rejectButton {
+  background-color: #FE991F !important;
+  border-color: #FE991F !important;
+  color: #FFFFFF !important;
+  border-radius: 0px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+.rejectButton:disabled {
+  background-color: transparent !important;
+  color: #FE991F !important;
+  border-color: #FE991F !important;
+}
+
+.completeButton:disabled {
+  background-color: transparent !important;
+  color: #09388A !important;
+  border-color: #09388A !important;
+}
+
+.creatorContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.creatorLabel {
+  color: #09388A;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.creatorName {
+  color: #001E42;
+  font-size: 0.9rem;
+}
+
 .moderatorContainer {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-left: auto;
 }
 
 .moderatorLabel {
@@ -192,7 +275,7 @@
 }
 
 .moderatorName {
-  color: #09388A;
+  color: #001E42;
   font-size: 0.9rem;
 }
 
@@ -233,6 +316,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
+  }
+  
+  .statusActions {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  
+  .moderatorContainer {
+    margin-left: 0;
   }
 }
 
@@ -295,6 +387,11 @@
   
   .footerRow {
     gap: 0.5rem;
+  }
+  
+  .statusActions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 
