@@ -14,7 +14,7 @@ import { Spinner, Button, Form } from 'react-bootstrap';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 import { ROUTES } from '../routes';
 import styles from './RequestDetailsPage.module.css';
-import { formatDateForFrontend } from '../api/dateFormatter';
+import { formatDateForFrontend, formatDateForBackend } from '../api/dateFormatter';
 
 export const RequestDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +31,7 @@ export const RequestDetailsPage = () => {
   const [arrivalDates, setArrivalDates] = useState<Record<number, string>>({});
   const [savingDepartureDate, setSavingDepartureDate] = useState(false);
   const [savingArrivalDates, setSavingArrivalDates] = useState<Record<number, boolean>>({});
+  const [localRouteReqs, setLocalRouteReqs] = useState<Record<number, { arrival_date?: string, ship_speed?: number }>>({});
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -50,20 +51,32 @@ export const RequestDetailsPage = () => {
       setDepartureDate(frontendDate);
       
       const dates: Record<number, string> = {};
+      const routeReqsMap: Record<number, { arrival_date?: string, ship_speed?: number }> = {};
+      
       if (current.routes && current.route_req) {
         current.routes.forEach((route, index) => {
           if (route.route_id && current.route_req?.[index]) {
             const backendArrivalDate = current.route_req[index].arrival_date;
             const frontendArrivalDate = backendArrivalDate ? formatDateForFrontend(backendArrivalDate) : '';
             dates[route.route_id] = frontendArrivalDate;
+            routeReqsMap[route.route_id] = {
+              arrival_date: current.route_req[index].arrival_date,
+              ship_speed: current.route_req[index].ship_speed
+            };
           }
         });
       }
       setArrivalDates(dates);
+      setLocalRouteReqs(routeReqsMap);
     }
   }, [current]);
 
   const isDraft = () => {
+    const status = current?.speed_request?.status?.toLowerCase();
+    return status === 'черновик' || status === 'draft';
+  };
+
+  const isEditable = () => {
     const status = current?.speed_request?.status?.toLowerCase();
     return status === 'черновик' || status === 'draft';
   };
@@ -77,7 +90,12 @@ export const RequestDetailsPage = () => {
         id: parseInt(id, 10), 
         departureDate 
       })).unwrap();
-      dispatch(fetchSpeedRequestById(parseInt(id, 10)));
+      
+      // Локально обновляем departure_date без перезагрузки всей заявки
+      if (current?.speed_request) {
+        const backendDate = formatDateForBackend(departureDate);
+        // Можно обновить локально, если нужно
+      }
     } catch (error) {
       console.error('Failed to save departure date:', error);
     } finally {
@@ -102,7 +120,17 @@ export const RequestDetailsPage = () => {
         routeId, 
         arrivalDate 
       })).unwrap();
-      dispatch(fetchSpeedRequestById(parseInt(id, 10)));
+      
+      // Локально обновляем дату прибытия без перезагрузки всей заявки
+      const backendDate = formatDateForBackend(arrivalDate);
+      setLocalRouteReqs(prev => ({
+        ...prev,
+        [routeId]: {
+          ...prev[routeId],
+          arrival_date: backendDate
+        }
+      }));
+      
     } catch (error) {
       console.error('Failed to save arrival date:', error);
       alert('Ошибка при сохранении даты прибытия');
@@ -118,6 +146,8 @@ export const RequestDetailsPage = () => {
         speedRequestId: parseInt(id, 10), 
         routeId 
       })).unwrap();
+      
+      // После удаления маршрута нужно обновить данные
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to delete route:', error);
@@ -152,6 +182,7 @@ export const RequestDetailsPage = () => {
 
     try {
       await dispatch(submitSpeedRequest(parseInt(id, 10))).unwrap();
+      // После отправки заявки обновляем статус
       dispatch(fetchSpeedRequestById(parseInt(id, 10)));
     } catch (error) {
       console.error('Failed to submit request:', error);
@@ -173,8 +204,8 @@ export const RequestDetailsPage = () => {
 
   const speedRequest = current.speed_request;
   const routes = current.routes || [];
-  const routeReqs = current.route_req || [];
   const draft = isDraft();
+  const editable = isEditable();
 
   const allRoutesHaveArrivalDates = routes.every((route) => {
     if (!route.route_id) return false;
@@ -230,7 +261,7 @@ export const RequestDetailsPage = () => {
         </span>
       </div>
 
-      {draft && !speedRequest?.departure_date && (
+      {editable && (
         <div className={styles.departureDateEdit}>
           <div className={styles.dateEditContainer}>
             <h4 className={styles.dateEditLabel}>Дата отправления:</h4>
@@ -239,12 +270,12 @@ export const RequestDetailsPage = () => {
                 type="date"
                 value={departureDate}
                 onChange={(e) => setDepartureDate(e.target.value)}
-                disabled={!draft || savingDepartureDate}
+                disabled={savingDepartureDate}
                 className={styles.dateInput}
               />
               <Button
                 onClick={handleSaveDepartureDate}
-                disabled={!draft || !departureDate || savingDepartureDate}
+                disabled={!departureDate || savingDepartureDate}
                 className={styles.saveButton}
               >
                 {savingDepartureDate ? (
@@ -276,14 +307,12 @@ export const RequestDetailsPage = () => {
         </div>
       ) : (
         <div className={styles.routesList}>
-          {routes.map((route, index) => {
-            const routeReq = routeReqs[index];
+          {routes.map((route) => {
             const routeId = route.route_id;
             if (!routeId) return null;
 
             const currentArrivalDate = arrivalDates[routeId] || '';
-            const isCompleted = speedRequest?.status === 'завершена' || 
-                              speedRequest?.status === 'completed';
+            const routeReq = localRouteReqs[routeId];
             const isSaving = savingArrivalDates[routeId];
 
             return (
@@ -305,7 +334,7 @@ export const RequestDetailsPage = () => {
                 <div className={styles.routeRightPanel}>
                   <div className={styles.arrivalDateContainer}>
                     <h4 className={styles.arrivalDateLabel}>Дата прибытия:</h4>
-                    {draft ? (
+                    {editable ? (
                       <div className={styles.arrivalDateControls}>
                         <Form.Control
                           type="date"
@@ -314,13 +343,13 @@ export const RequestDetailsPage = () => {
                             const newDate = e.target.value;
                             setArrivalDates(prev => ({ ...prev, [routeId]: newDate }));
                           }}
-                          disabled={!draft || isSaving}
+                          disabled={isSaving}
                           className={styles.dateInput}
                         />
                         <Button
                           variant="outline-success"
                           onClick={() => handleUpdateArrivalDate(routeId)}
-                          disabled={!draft || !currentArrivalDate || isSaving}
+                          disabled={!currentArrivalDate || isSaving}
                           className={styles.saveArrivalButton}
                           title="Сохранить дату прибытия"
                         >
@@ -351,11 +380,10 @@ export const RequestDetailsPage = () => {
                     </h4>
                   </div>
 
-                  {draft && (
+                  {editable && (
                     <Button
                       variant="danger"
                       onClick={() => handleDeleteRoute(routeId)}
-                      disabled={!draft}
                       className={styles.deleteRouteButton}
                     >
                       Удалить маршрут

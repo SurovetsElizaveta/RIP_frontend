@@ -388,24 +388,10 @@ export const RequestsPage = () => {
                 <Button 
                   type="button"
                   onClick={handleApplyFilters}
-                  className={`${styles.applyButton} w-100 d-flex align-items-center justify-content-center`}
+                  className={styles.applyButton}
                   disabled={loadingList || loadingResults}
                 >
-                  {loadingResults ? (
-                    <>
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                        className="me-2"
-                      />
-                      Применение...
-                    </>
-                  ) : (
-                    'Применить'
-                  )}
+                  Применить
                 </Button>
               </Col>
             </Row>
@@ -493,7 +479,7 @@ export const RequestsPage = () => {
                             request.id && handleStatusChange(request.id, 'complete');
                           }}
                         >
-                          {isUpdating ? 'Обновление...' : 'Завершить'}
+                          Завершить
                         </Button>
                         <Button
                           size="sm"
@@ -505,7 +491,7 @@ export const RequestsPage = () => {
                             request.id && handleStatusChange(request.id, 'reject');
                           }}
                         >
-                          {isUpdating ? 'Обновление...' : 'Отклонить'}
+                          Отклонить
                         </Button>
                       </div>
                     )}

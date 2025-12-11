@@ -160,6 +160,12 @@ export interface DeleteRouteSpeedRequestParams extends RequestParams {
   };
 }
 
+export interface CompleteSpeedRequestParams extends RequestParams {
+  body?: {
+    status: string;
+  };
+}
+
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
@@ -682,7 +688,7 @@ export class Api<
      * @request PUT:/speedrequests/{speed_request_id}/complete
      * @secure
      */
-    completeUpdate: (speedRequestId: number, params: RequestParams = {}) =>
+    completeUpdate: (speedRequestId: number, params: CompleteSpeedRequestParams = {}) =>
       this.request<object, any>({
         path: `/speedrequests/${speedRequestId}/complete`,
         method: "PUT",

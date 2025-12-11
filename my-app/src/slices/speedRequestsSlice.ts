@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { api } from '../api';
 import type {
+  CompleteSpeedRequestParams,
   DtoSpeedRequest,
   DtoSpeedRequestDetailedResponse,
 } from '../api/api';
@@ -205,10 +206,17 @@ export const completeSpeedRequest = createAsyncThunk(
   'speedRequests/completeSpeedRequest',
   async (id: number, { rejectWithValue }) => {
     try {
-      await api.speedrequests.completeUpdate(id);
+      // Используйте правильный тип параметров
+      await api.speedrequests.completeUpdate(id, {
+        body: {
+          status: 'завершена'
+        }
+      } as CompleteSpeedRequestParams);
       return id;
-    } catch (e) {
-      return rejectWithValue('Ошибка при завершении заявки');
+    } catch (e: any) {
+      console.error('Error completing speed request:', e);
+      const errorMessage = e.response?.data?.error || 'Ошибка при завершении заявки';
+      return rejectWithValue(errorMessage);
     }
   },
 );
@@ -217,14 +225,16 @@ export const rejectSpeedRequest = createAsyncThunk(
   'speedRequests/rejectSpeedRequest',
   async (id: number, { rejectWithValue }) => {
     try {
-      await api.speedrequests.speedrequestsUpdate(id, {
+      await api.speedrequests.completeUpdate(id, {
         body: {
-          status: 'отклонена',
-        } as any,
-      });
+          status: 'отклонена'
+        }
+      } as CompleteSpeedRequestParams);
       return id;
-    } catch (e) {
-      return rejectWithValue('Ошибка при отклонении заявки');
+    } catch (e: any) {
+      console.error('Error rejecting speed request:', e);
+      const errorMessage = e.response?.data?.error || 'Ошибка при отклонении заявки';
+      return rejectWithValue(errorMessage);
     }
   },
 );
