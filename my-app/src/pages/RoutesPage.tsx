@@ -13,8 +13,20 @@ import { setMinDistanceAction, setMaxDistanceAction } from '../slices/filterSlic
 
 export const RoutesPage: FC = () => {
   const [routes, setRoutes] = useState<Route[]>([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const hasFilters = searchParams.has('min_distance') || searchParams.has('max_distance');
+    
+    if (hasFilters) {
+      searchParams.delete('min_distance');
+      searchParams.delete('max_distance');
+      setSearchParams(searchParams);
+      dispatch(setMinDistanceAction(''));
+      dispatch(setMaxDistanceAction(''));
+    }
+  }, []);
 
   const fetchRoutes = async () => {
     const min = searchParams.get('min_distance');

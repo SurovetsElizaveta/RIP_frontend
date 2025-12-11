@@ -7,8 +7,7 @@ import {
     useMinDistance, 
     useMaxDistance, 
     setMinDistanceAction, 
-    setMaxDistanceAction, 
-    resetFiltersAction 
+    setMaxDistanceAction
 } from "../slices/filterSlice";
 
 export const FilterBar: FC = () => {
@@ -26,12 +25,7 @@ export const FilterBar: FC = () => {
     
     navigate(`/routes?min_distance=${min}&max_distance=${max}`);
   };
-
-  const handleReset = () => {
-    dispatch(resetFiltersAction());
-    navigate('/routes');
-  };
-
+  
   const handleInputChange = (
     setter: (value: string) => void
   ) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,16 +71,6 @@ export const FilterBar: FC = () => {
             className={styles['distance-filter-btn']}
           >
             Применить
-          </Button>
-        </Col>
-        <Col xs="auto">
-          <Button 
-            type="button" 
-            className={styles['distance-filter-btn']}
-            onClick={handleReset}
-            variant="outline-secondary"
-          >
-            Сбросить
           </Button>
         </Col>
       </Row>
