@@ -1,10 +1,8 @@
 import type { Route } from '../types/types';
 
-// ВАЖНО: Замените 192.168.1.100 на ваш реальный IP адрес!
 const YOUR_LOCAL_IP = '10.165.215.65';
 const API_BASE = `https://${YOUR_LOCAL_IP}:8080/api`;
 
-// Mock данные остаются без изменений
 export const ROUTES_MOCK: Route[] = [
   {
     RouteID: 1,
@@ -26,7 +24,6 @@ export const ROUTES_MOCK: Route[] = [
   }
 ];
 
-// Функция для фильтрации mock данных
 const filterMockRoutes = (routes: Route[], minDistance?: number, maxDistance?: number): Route[] => {
   let filtered = [...routes];
   if (minDistance) {
@@ -38,20 +35,18 @@ const filterMockRoutes = (routes: Route[], minDistance?: number, maxDistance?: n
   return filtered;
 };
 
-// Основная функция запроса маршрутов
 export const getRoutes = async (minDistance?: number, maxDistance?: number): Promise<Route[]> => {
   try {
     const params = new URLSearchParams();
     if (minDistance !== undefined) params.append('min_distance', minDistance.toString());
     if (maxDistance !== undefined) params.append('max_distance', maxDistance.toString());
     
-    // ИСПОЛЬЗУЕМ HTTPS вместо прокси
     const response = await fetch(`${API_BASE}/routes?${params}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include', // Важно для кук/JWT
+      credentials: 'include',
     });
     
     if (!response.ok) {
@@ -61,12 +56,10 @@ export const getRoutes = async (minDistance?: number, maxDistance?: number): Pro
     return await response.json();
   } catch (error) {
     console.warn('Using mock data due to error:', error);
-    // Fallback на mock данные
     return filterMockRoutes(ROUTES_MOCK, minDistance, maxDistance);
   }
 };
 
-// Получение конкретного маршрута по ID
 export const getRouteById = async (id: number): Promise<Route> => {
   try {
     const response = await fetch(`${API_BASE}/routes/${id}`, {
@@ -90,7 +83,6 @@ export const getRouteById = async (id: number): Promise<Route> => {
   }
 };
 
-// Получение информации о черновике (всегда возвращает 0)
 export const getDraftInfo = async (): Promise<{draft_id: number | null, count: number}> => {
   try {
     const response = await fetch(`${API_BASE}/speedrequests/draft`, {
@@ -109,7 +101,6 @@ export const getDraftInfo = async (): Promise<{draft_id: number | null, count: n
     return await response.json();
   } catch (error) {
     console.warn('Using mock draft data due to error:', error);
-    // Всегда возвращаем 0 как в логике
     return { draft_id: null, count: 0 };
   }
 };
