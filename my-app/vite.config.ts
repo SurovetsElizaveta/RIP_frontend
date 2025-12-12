@@ -31,20 +31,20 @@ export default defineConfig({
       }
     })
   ],
-  base: "/",
+  base: "/RIP_frontend/",
   server: {
     https:{
       key: fs.readFileSync(path.resolve(__dirname, 'cert.key')),
       cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
     },
-    proxy: {
-      "/api": {
-        target: "http://localhost:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, "/api"), // можно удалить
-      },
-    },
+    // proxy: {
+    //   "/api": {
+    //     target: "http://localhost:8080", // ← ИЗМЕНИТЕ ЗДЕСЬ
+    //     changeOrigin: true,
+    //     secure: false,
+    //     rewrite: (path) => path.replace(/^\/api/, "/api"), // можно удалить
+    //   },
+    // },
     watch: {
         usePolling: true,
     }, 
