@@ -1,7 +1,7 @@
 import type { Route } from '../types/types';
 
 // ВАЖНО: Замените 192.168.1.100 на ваш реальный IP адрес!
-const YOUR_LOCAL_IP = '192.168.0.55';
+const YOUR_LOCAL_IP = '10.165.215.65';
 const API_BASE = `https://${YOUR_LOCAL_IP}:8080/api`;
 
 // Mock данные остаются без изменений
