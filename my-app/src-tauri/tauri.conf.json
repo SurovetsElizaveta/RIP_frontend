@@ -5,7 +5,7 @@
   "identifier": "rip.frontend.application",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "https://172.20.32.1:3000/",
+    "devUrl": "https://10.65.104.65:3000/",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
@@ -39,8 +39,8 @@
     "http": {
       "scope": [
         "https://localhost:3000",
-        "http://10.198.218.65:8080",
-        "http://172.20.32.1:8080"
+        "https://10.65.104.65:8080",
+        "https://172.20.32.1:8080"
       ],
       "enabled": true
     }
