@@ -31,8 +31,16 @@ export const RequestsPage = () => {
   const { list, loadingList } = useSelector((state: RootState) => state.speedRequests);
   const { isModerator } = useSelector((state: RootState) => state.user);
 
+  const getTodayDateString = useCallback(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }, []);
+
   const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
+  const [dateTo, setDateTo] = useState(getTodayDateString());
   const [status, setStatus] = useState('');
   const [creator, setCreator] = useState('');
   const [filteredList, setFilteredList] = useState<RequestWithResult[]>([]);
@@ -42,7 +50,7 @@ export const RequestsPage = () => {
   const [appliedFilters, setAppliedFilters] = useState({
     status: '',
     dateFrom: '',
-    dateTo: '',
+    dateTo: getTodayDateString(),
     creator: '',
   });
 
@@ -50,8 +58,10 @@ export const RequestsPage = () => {
   const POLL_INTERVAL_MS = 5000;
 
   useEffect(() => {
-    dispatch(fetchSpeedRequestsList({}));
-  }, [dispatch]);
+    dispatch(fetchSpeedRequestsList({
+      dateTo: getTodayDateString(),
+    }));
+  }, [dispatch, getTodayDateString]);
 
   const fetchRequestFullInfo = useCallback(async (requestId: number): Promise<{
     status: string;
@@ -169,7 +179,7 @@ export const RequestsPage = () => {
     const newFilters = {
       status,
       dateFrom,
-      dateTo,
+      dateTo: dateTo || getTodayDateString(), 
       creator,
     };
     
@@ -181,7 +191,7 @@ export const RequestsPage = () => {
         fetchSpeedRequestsList({
           status: status || undefined,
           dateFrom: dateFrom || undefined,
-          dateTo: dateTo || undefined,
+          dateTo: dateTo || getTodayDateString(), 
         })
       ).unwrap();
       
@@ -353,6 +363,7 @@ export const RequestsPage = () => {
                     type="date" 
                     value={dateFrom}
                     onChange={(e) => setDateFrom(e.target.value)}
+                    max={dateTo || getTodayDateString()} 
                   />
                 </Form.Group>
               </Col>
@@ -365,6 +376,7 @@ export const RequestsPage = () => {
                     type="date" 
                     value={dateTo}
                     onChange={(e) => setDateTo(e.target.value)}
+                    max={getTodayDateString()} 
                   />
                 </Form.Group>
               </Col>
