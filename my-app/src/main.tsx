@@ -15,7 +15,7 @@ if (import.meta.env.DEV) {
     const [url, options] = args;
     
     // Если запрос к нашему локальному HTTPS бэкенду
-    if (typeof url === 'string' && url.includes('https://192.168.0.55:8080')) {
+    if (typeof url === 'string' && url.includes('https://192.168.0.78:8080')) {
       const modifiedOptions = {
         ...options,
         mode: 'cors' as RequestMode,

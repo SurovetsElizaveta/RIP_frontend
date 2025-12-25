@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <Router basename='RIP_frontend'>
+    <Router basename='routes_app_frontend'>
       <div className="App">
         <Header />
         <Routes>
