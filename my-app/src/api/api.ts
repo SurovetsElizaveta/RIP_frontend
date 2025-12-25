@@ -11,15 +11,14 @@
  */
 
 export interface DsRoute {
-  Delay?: number;
-  Description?: string;
-  Distance?: number;
-  ImageURL?: string;
   RouteID?: number;
-  Status?: string;
   Title?: string;
+  Distance?: number;
+  Description?: string;
+  ImageURL?: string;
+  Status?: string;
+  Delay?: number;
 }
-
 export interface DtoAuthResponse {
   access_token?: string;
   expires_in?: number;

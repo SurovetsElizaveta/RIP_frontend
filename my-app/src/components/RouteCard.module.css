@@ -107,6 +107,38 @@
     color: #FE991F !important;
 }
 
+.route-card-flex .similarity-badge {
+    background-color: #FE991F !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 0px !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    margin-top: 4px !important;
+    vertical-align: middle;
+  }
+  
+  .route-card-flex:hover .similarity-badge {
+    background-color: #FFFFFF !important;
+    color: #09388A !important;
+  }
+  
+  @media (max-width: 768px) {
+    .similarity-badge {
+      font-size: 0.65rem !important;
+      padding: 2px 5px !important;
+      margin-left: 6px;
+    }
+  }
+  
+  @media (max-width: 545px) {
+    .similarity-badge {
+      font-size: 0.6rem !important;
+      padding: 2px 4px !important;
+      margin-left: 4px;
+    }
+  }
+
 @media (max-width: 1200px) {
     .route-card-flex {
         width: 350px;

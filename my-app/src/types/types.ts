@@ -2,10 +2,16 @@ export interface Route {
   RouteID: number;
   Title: string;
   Distance: number;
-  Description: string;
-  ImageURL?: string;
-  Status: string;
+  Description?: string;
+  ImageURL: string;
+  Status?: string;
   Delay?: number;
+}
+
+export interface RouteWithSimilarity extends Route {
+  similarityScore?: number;
+  isVisible?: boolean;
+  embedding?: number[];
 }
 
 export interface SpeedRequest {

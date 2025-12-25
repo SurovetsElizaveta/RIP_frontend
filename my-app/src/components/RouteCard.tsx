@@ -2,16 +2,18 @@ import { useNavigate } from 'react-router-dom';
 import styles from './RouteCard.module.css';
 import type { Route } from '../types/types';
 import { ROUTES } from '../routes';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Badge } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store';
 import { addRouteToDraft } from '../slices/speedRequestsSlice';
 
 interface RouteCardProps {
   route: Route;
+  showSimilarity?: boolean;
+  similarityScore?: number;
 }
 
-export const RouteCard = ({ route }: RouteCardProps) => {
+export const RouteCard = ({ route, showSimilarity = false, similarityScore }: RouteCardProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
@@ -41,6 +43,12 @@ export const RouteCard = ({ route }: RouteCardProps) => {
             <Card.Text as="h5" className={`${styles['custom-card-distance']} text-muted`}>
               {route.Distance} km
             </Card.Text>
+            {showSimilarity && similarityScore !== undefined && (
+                <Badge 
+                  className={styles['similarity-badge']}>
+                  {Math.round(similarityScore * 100)}%
+                </Badge>
+              )}
           </div>
           {isAuthenticated && (
             <Button 

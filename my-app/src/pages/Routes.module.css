@@ -13,6 +13,20 @@
   justify-content: center;
 }
 
+.search-image-btn {
+  min-width: 200px;
+}
+
+.search-modal-image {
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.similarity-badge {
+  font-size: 0.7rem;
+  vertical-align: middle;
+}
+
 @media (max-width: 768px) {
   .main-space {
     margin: 0px 20px 0px 20px;

@@ -19,7 +19,6 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    // Восстанавливаем сессию пользователя при загрузке приложения
     dispatch(restoreUserSessionAsync());
   }, [dispatch]);
 
@@ -36,7 +35,6 @@ function App() {
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
           <Route path={ROUTES.REQUEST_DETAILS} element={<RequestDetailsPage />} />
-          {/* Удали маршрут для DRAFT, т.к. черновики теперь открываются через REQUEST_DETAILS */}
         </Routes>
       </div>
     </Router>
