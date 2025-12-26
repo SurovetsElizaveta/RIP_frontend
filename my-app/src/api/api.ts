@@ -1,6 +1,6 @@
 import type { Route } from '../types/types';
 
-const YOUR_LOCAL_IP = '192.168.0.78';
+const YOUR_LOCAL_IP = '10.92.235.65';
 const API_BASE = `https://${YOUR_LOCAL_IP}:8080/api`;
 
 export const ROUTES_MOCK: Route[] = [
