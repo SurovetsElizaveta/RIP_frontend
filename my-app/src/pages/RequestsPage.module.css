@@ -1,3 +1,5 @@
+/* RequestsPage.module.css */
+
 .mainContainer {
   margin: 0px 180px 0px 180px;
   position: relative;
@@ -17,7 +19,7 @@
   border: none !important;
   background-color: transparent !important;
   border-radius: 0px !important;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 
 .filterCard .form-label {
@@ -104,132 +106,201 @@
   border-radius: 0px;
 }
 
-.requestsList {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Таблица */
+.tableWrapper {
+  background-color: transparent;
+  border-radius: 0px;
+  overflow: hidden;
   margin-bottom: 3rem;
 }
 
-.requestCard {
-  background-color: #FFFFFF;
-  border: none !important;
-  border-radius: 0px !important;
-  cursor: pointer;
+.tableHeader {
+  background-color: #09388A;
+  color: #FFFFFF;
+  padding: 1rem 1.5rem;
+  border-radius: 4px 4px 0 0;
+}
+
+.headerRow {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.headerRow:not(.headerRowWithActions) {
+  grid-template-columns: 
+    0.25fr   /* № */
+    1fr     /* Дата создания */
+    1fr     /* Дата формирования */
+    1fr     /* Дата завершения */
+    0.5fr     /* Создатель */
+    0.5fr     /* Модератор */
+    1fr     /* Статус */
+    0.5fr;  /* Результаты */
+}
+
+.headerRow.headerRowWithActions {
+  grid-template-columns: 
+    0.25fr   /* № */
+    0.75fr     /* Дата создания */
+    0.75fr     /* Дата формирования */
+    0.75fr     /* Дата завершения */
+    0.5fr     /* Создатель */
+    0.5fr     /* Модератор */
+    0.75fr     /* Статус */
+    0.5fr   /* Результаты */
+    0.5fr;  /* Действия (только для модераторов) */
+}
+
+.headerCell {
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0 5px;
   width: 100%;
+  box-sizing: border-box;
 }
 
-.cardBody {
-  padding: 1.25rem !important;
-}
-
-.cardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.75rem;
-  color: #001E42;
-}
-
-.headerLeft {
+.tableBody {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
+  gap: 8px; /* Промежуток между карточками */
+  background-color: transparent;
+  padding-top: 8px; /* Отступ сверху для первой карточки */
 }
 
-.headerRight {
+.tableRowCard {
+  background-color: #FFFFFF;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+}
+
+.tableRowCard:hover {
+  border: 1px solid #09388A !important;
+}
+
+.tableCardBody {
+  padding: 0 !important;
+}
+
+.tableRow {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  min-height: 60px;
+}
+
+.tableRow:not(.tableRowWithActions) {
+  grid-template-columns: 
+    0.25fr   /* № */
+    1fr     /* Дата создания */
+    1fr     /* Дата формирования */
+    1fr     /* Дата завершения */
+    0.5fr     /* Создатель */
+    0.5fr     /* Модератор */
+    1fr     /* Статус */
+    0.5fr;  /* Результаты */
+}
+
+.tableRow.tableRowWithActions {
+  grid-template-columns: 
+    0.25fr   /* № */
+    0.75fr     /* Дата создания */
+    0.75fr     /* Дата формирования */
+    0.75fr     /* Дата завершения */
+    0.5fr     /* Создатель */
+    0.5fr     /* Модератор */
+    0.75fr     /* Статус */
+    0.5fr   /* Результаты */
+    0.5fr;  /* Действия (только для модераторов) */
+}
+
+.tableCell {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #001E42;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0 5px;
+  min-height: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.cardTitle {
-  font-size: 1.1rem;
-  color: #001E42;
-  margin: 0;
+.cellValue {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+  overflow: hidden;
+}
+
+.statusCell {
+  justify-content: center;
 }
 
 .statusBadge {
-  border-radius: 0px !important;
-  color: #09388A !important;
-  font-size: 14px;
-  font-weight: 500;
-  border: none !important;
-  background-color: none !important;
-  text-transform: uppercase;
-}
-
-.datesRow {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #F0F0F0;
-}
-
-.datesLine {
-  color: #001E42;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  display: inline-block;
-}
-
-.footerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.resultsContainer {
-  display: flex;
-  background-color: transparent !important;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.resultsLabel {
   color: #09388A;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-.resultBadgeContainer {
-  display: flex;
-  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .resultBadge {
-  border-radius: 0px !important;
-  font-size: 0.9rem;
-  color: #09388A;
-  border: none !important;
+  color: #001E42;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.statusActions {
+.actionsCell {
   display: flex;
   gap: 0.5rem;
-  margin-left: auto;
-  margin-right: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .completeButton {
   background-color: #09388A !important;
   border-color: #09388A !important;
   color: #FFFFFF !important;
-  border-radius: 0px !important;
-  padding: 0.25rem 0.75rem !important;
-  font-size: 0.875rem !important;
+  border-radius: 2px !important;
+  padding: 0.2rem 0.6rem !important;
+  font-size: 0.75rem !important;
   font-weight: 500 !important;
+  white-space: nowrap;
 }
 
 .rejectButton {
   background-color: #FE991F !important;
   border-color: #FE991F !important;
   color: #FFFFFF !important;
-  border-radius: 0px !important;
-  padding: 0.25rem 0.75rem !important;
-  font-size: 0.875rem !important;
+  border-radius: 2px !important;
+  padding: 0.2rem 0.6rem !important;
+  font-size: 0.75rem !important;
   font-weight: 500 !important;
+  white-space: nowrap;
 }
 
 .rejectButton:disabled {
@@ -244,39 +315,8 @@
   border-color: #09388A !important;
 }
 
-.creatorContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.creatorLabel {
-  color: #09388A;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-.creatorName {
-  color: #001E42;
-  font-size: 0.9rem;
-}
-
-.moderatorContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-left: auto;
-}
-
-.moderatorLabel {
-  color: #09388A;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-.moderatorName {
-  color: #001E42;
-  font-size: 0.9rem;
+.cellLabelMobile {
+  display: none;
 }
 
 @media (max-width: 1200px) {
@@ -286,8 +326,10 @@
     padding-left: 40px !important;
   }
   
-  .datesLine {
-    font-size: 0.85rem;
+  /* Уменьшаем gap для меньших экранов */
+  .headerRow,
+  .tableRow {
+    gap: 0.75rem;
   }
 }
 
@@ -298,33 +340,70 @@
     padding-left: 30px !important;
   }
   
-  .cardHeader {
+  .tableHeader {
+    display: none;
+  }
+  
+  .tableRowCard {
+    margin-bottom: 8px;
+  }
+  
+  .tableRow {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 1.25rem;
   }
   
-  .headerRight {
-    align-self: flex-start;
+  .tableCell {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    justify-content: space-between;
+    text-align: left;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #F0F0F0;
+    min-height: auto;
+    width: 100%;
   }
   
-  .datesLine {
+  .tableCell:last-child {
+    border-bottom: none;
+  }
+  
+  .cellLabelMobile {
+    display: block;
+    color: #09388A;
+    font-weight: 500;
     font-size: 0.85rem;
   }
   
-  .footerRow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+  .cellValue {
+    justify-content: flex-start;
+    text-align: left;
+    min-height: auto;
+    overflow: visible;
   }
   
-  .statusActions {
-    margin-left: 0;
-    margin-right: auto;
+  .statusCell {
+    justify-content: flex-start;
   }
   
-  .moderatorContainer {
-    margin-left: 0;
+  .actionsCell {
+    justify-content: flex-start;
+    min-width: auto;
+  }
+  
+  .statusBadge {
+    min-width: auto;
+    justify-content: flex-start;
+    width: auto;
+  }
+  
+  .completeButton,
+  .rejectButton {
+    min-width: 70px;
   }
 }
 
@@ -348,22 +427,22 @@
     width: 100%;
   }
   
-  .cardTitle {
-    font-size: 1rem;
+  .tableCell {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
   
-  .datesLine {
+  .cellLabelMobile {
     font-size: 0.8rem;
-    display: block;
   }
   
-  .resultsLabel,
-  .moderatorLabel {
+  .cellValue {
     font-size: 0.85rem;
   }
   
-  .moderatorName {
-    font-size: 0.85rem;
+  .statusBadge,
+  .resultBadge {
+    font-size: 0.75rem;
   }
 }
 
@@ -377,21 +456,20 @@
     font-size: 1.5rem;
   }
   
-  .cardBody {
-    padding: 1rem !important;
+  .tableRow {
+    padding: 1rem;
   }
   
-  .datesLine {
-    font-size: 0.75rem;
-  }
-  
-  .footerRow {
-    gap: 0.5rem;
-  }
-  
-  .statusActions {
+  .actionsCell {
+    flex-direction: column;
     width: 100%;
-    justify-content: flex-start;
+    align-items: stretch;
+  }
+  
+  .completeButton,
+  .rejectButton {
+    width: 100%;
+    min-width: auto;
   }
 }
 
@@ -401,17 +479,11 @@
     padding-top: 70px;
   }
   
-  .cardHeader {
-    flex-direction: column;
-    align-items: stretch;
+  .cellLabelMobile {
+    font-size: 0.75rem;
   }
   
-  .headerLeft,
-  .headerRight {
-    justify-content: space-between;
-  }
-  
-  .datesLine {
-    font-size: 0.7rem;
+  .cellValue {
+    font-size: 0.8rem;
   }
 }

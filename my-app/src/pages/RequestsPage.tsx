@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes';
 import styles from './RequestsPage.module.css';
+import { formatDateForFrontend } from '../api/dateFormatter'; // добавлен импорт
 
 interface RequestWithResult {
   id?: number;
@@ -295,30 +296,30 @@ export const RequestsPage = () => {
     }
   };
 
+  // Обновленная функция форматирования дат
   const formatDateForDisplay = (dateString?: string) => {
-    return dateString || 'Не указана';
-  };
-
-  const formatDatesLine = (request: RequestWithResult) => {
-    const parts = [];
+    if (!dateString) return '—';
     
-    if (request.creation_date) {
-      parts.push(`Создание: ${formatDateForDisplay(request.creation_date)}`);
+    // Если дата уже в формате ДД.ММ.ГГГГ, возвращаем как есть
+    const parts = dateString.split('.');
+    if (parts.length === 3) {
+      const [day, month, year] = parts;
+      return `${day}.${month}.${year}`;
     }
     
-    if (request.departure_date) {
-      parts.push(`Отправление: ${formatDateForDisplay(request.departure_date)}`);
+    // Если дата в формате YYYY-MM-DD, конвертируем в ДД.ММ.ГГГГ
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString; // если невалидная дата, возвращаем как есть
+      }
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    } catch {
+      return dateString;
     }
-    
-    if (request.formation_date) {
-      parts.push(`Формирование: ${formatDateForDisplay(request.formation_date)}`);
-    }
-    
-    if (request.completion_date) {
-      parts.push(`Завершение: ${formatDateForDisplay(request.completion_date)}`);
-    }
-    
-    return parts.join(' • ');
   };
 
   useEffect(() => {
@@ -423,95 +424,127 @@ export const RequestsPage = () => {
           </Card.Body>
         </Card>
       ) : (
-        <div className={styles.requestsList}>
-          {filteredList.map((request) => {
-            const isTerminalStatus = request.status === 'завершена' || request.status === 'отклонена';
-            const isUpdating = request.id ? statusUpdatingIds[request.id] : false;
+        <div className={styles.tableWrapper}>
+          {/* Заголовок таблицы */}
+          <div className={styles.tableHeader}>
+            <div className={`${styles.headerRow} ${isModerator ? styles.headerRowWithActions : ''}`}>
+              <div className={styles.headerCell}>№</div>
+              <div className={styles.headerCell}>Дата создания</div>
+              <div className={styles.headerCell}>Дата формирования</div>
+              <div className={styles.headerCell}>Дата завершения</div>
+              <div className={styles.headerCell}>Создатель</div>
+              <div className={styles.headerCell}>Модератор</div>
+              <div className={styles.headerCell}>Статус</div>
+              <div className={styles.headerCell}>Результаты</div>
+              {isModerator && <div className={styles.headerCell}>Действия</div>}
+            </div>
+          </div>
+          
+          {/* Строки-карточки */}
+          <div className={styles.tableBody}>
+            {filteredList.map((request) => {
+              const isTerminalStatus = request.status === 'завершена' || request.status === 'отклонена';
+              const isUpdating = request.id ? statusUpdatingIds[request.id] : false;
 
-            return (
-              <Card 
-                key={request.id}
-                className={styles.requestCard}
-                onClick={() => handleRequestClick(request)}
-              >
-                <Card.Body className={styles.cardBody}>
-                  <div className={styles.cardHeader}>
-                    <div className={styles.headerLeft}>
-                      <Card.Title className={styles.cardTitle}>
-                        Заявка #{request.id}
-                      </Card.Title>
-                      <div className={styles.creatorContainer}>
-                        <span className={styles.creatorLabel}>Создатель:</span>
-                        <span className={styles.creatorName}>
-                          {request.creator_login || '—'}
+              return (
+                <Card 
+                  key={request.id}
+                  className={styles.tableRowCard}
+                  onClick={() => handleRequestClick(request)}
+                >
+                  <Card.Body className={styles.tableCardBody}>
+                    <div className={`${styles.tableRow} ${isModerator ? styles.tableRowWithActions : ''}`}>
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>№:</span>
+                        <span className={styles.cellValue}>#{request.id}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Дата создания:</span>
+                        <span className={styles.cellValue}>{formatDateForDisplay(request.creation_date)}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Дата формирования:</span>
+                        <span className={styles.cellValue}>{formatDateForDisplay(request.formation_date)}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Дата завершения:</span>
+                        <span className={styles.cellValue}>{formatDateForDisplay(request.completion_date)}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Создатель:</span>
+                        <span className={styles.cellValue}>{request.creator_login || '—'}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Модератор:</span>
+                        <span className={styles.cellValue}>{request.moderator_login || '—'}</span>
+                      </div>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Статус:</span>
+                        <span className={`${styles.cellValue} ${styles.statusCell}`}>
+                          <span className={styles.statusBadge}>
+                            {request.status}
+                          </span>
                         </span>
                       </div>
-                      {request.moderator_login && (
-                        <div className={styles.moderatorContainer}>
-                          <span className={styles.moderatorLabel}>Модератор:</span>
-                          <span className={styles.moderatorName}>{request.moderator_login}</span>
+                      
+                      <div className={styles.tableCell}>
+                        <span className={styles.cellLabelMobile}>Результаты:</span>
+                        <span className={styles.cellValue}>
+                          {request.loadingResult ? (
+                            <Spinner animation="border" size="sm" />
+                          ) : (
+                            <div className={styles.resultBadge}>
+                              {request.result || 0}
+                            </div>
+                          )}
+                        </span>
+                      </div>
+                      
+                      {isModerator && (
+                        <div 
+                          className={styles.tableCell}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className={styles.cellLabelMobile}>Действия:</span>
+                          <div className={styles.actionsCell}>
+                            <Button
+                              size="sm"
+                              className={styles.completeButton}
+                              disabled={isTerminalStatus || isUpdating}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                request.id && handleStatusChange(request.id, 'complete');
+                              }}
+                            >
+                              Завершить
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline-danger"
+                              className={styles.rejectButton}
+                              disabled={isTerminalStatus || isUpdating}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                request.id && handleStatusChange(request.id, 'reject');
+                              }}
+                            >
+                              Отклонить
+                            </Button>
+                          </div>
                         </div>
                       )}
                     </div>
-                    <div className={styles.headerRight}>
-                      <div className={styles.statusBadge}>
-                        {request.status}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className={styles.datesRow}>
-                    <span className={styles.datesLine}>
-                      {formatDatesLine(request)}
-                    </span>
-                  </div>
-                  
-                  <div className={styles.footerRow}>
-                    <div className={styles.resultsContainer}>
-                      <span className={styles.resultsLabel}>Результатов:</span>
-                      <div className={styles.resultBadgeContainer}>
-                        {request.loadingResult ? (
-                          <Spinner animation="border" size="sm" />
-                        ) : (
-                          <div className={styles.resultBadge}>
-                            {request.result || 0}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {isModerator && (
-                      <div className={styles.statusActions} onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          size="sm"
-                          className={styles.completeButton}
-                          disabled={isTerminalStatus || isUpdating}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            request.id && handleStatusChange(request.id, 'complete');
-                          }}
-                        >
-                          Завершить
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          className={styles.rejectButton}
-                          disabled={isTerminalStatus || isUpdating}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            request.id && handleStatusChange(request.id, 'reject');
-                          }}
-                        >
-                          Отклонить
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </Card.Body>
-              </Card>
-            );
-          })}
+                  </Card.Body>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       )}
     </Container>
